@@ -1,0 +1,2434 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Hiring Decision Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/**
+ * Semantic tokens, copied from `@bpmn-io/theme` to style the components
+ * according to this theme.
+ *
+ * Names and values of the tokens should stay intact with the `@bpmn-io/theme`
+ * source of truth, to ensure matching styles and allow overrides with an
+ * alternative theme.
+ */
+.bio-theme-parent {
+  --bio-surface: hsl(0, 0%, 100%);
+  --bio-surface-overlay: hsl(0, 0%, 100%);
+  --bio-surface-subtle: hsl(225, 10%, 97%);
+  --bio-surface-medium: hsl(225, 10%, 95%);
+  --bio-surface-inverted: hsl(0, 0%, 22%);
+  --bio-surface-inverted-subtle: hsl(225, 10%, 35%);
+  --bio-text: hsl(225, 10%, 15%);
+  --bio-text-subtle: hsl(225, 10%, 35%);
+  --bio-text-subtlest: hsl(225, 10%, 55%);
+  --bio-text-on-inverted: hsl(0, 0%, 100%);
+  --bio-border: hsl(225, 10%, 75%);
+  --bio-border-disabled: hsl(225, 10%, 90%);
+  --bio-primary: hsl(205, 100%, 40%);
+  --bio-primary-surface: hsl(205, 100%, 95%);
+  --bio-danger: hsl(360, 100%, 45%);
+  --bio-danger-surface-subtle: hsl(360, 100%, 97%);
+  --bio-selected-surface: var(--bio-surface-medium);
+  --bio-selected-text: var(--bio-text);
+  --bio-focus: hsl(205, 100%, 40%);
+  --bio-focus-surface: hsl(205, 100%, 95%);
+  --bio-canvas-accent: hsl(205, 100%, 40%);
+  --bio-canvas-accent-subtle: hsl(205, 100%, 75%);
+  --bio-shadow: hsla(0, 0%, 0%, 30%);
+  --bio-shadow-subtle: hsla(0, 0%, 0%, 10%);
+  --bio-radius-sm: 2px;
+  --bio-radius-md: 3px;
+  --bio-radius-lg: 4px;
+}
+
+/**
+ * color definitions
+ *
+ * Colours resolve through the semantic tokens in `@bpmn-io/theme`; a handful of
+ * values with no matching token stay literal.
+ */
+.djs-parent {
+
+  --button-border-radius: var(--bio-radius-md);
+  --input-border-radius: var(--bio-radius-sm);
+  --surface-border-radius: var(--bio-radius-lg);
+
+  --canvas-fill-color: var(--bio-surface);
+
+  --accent-color: var(--bio-canvas-accent);
+
+  --bendpoint-fill-color: var(--bio-canvas-accent);
+  --bendpoint-stroke-color: var(--canvas-fill-color);
+
+  --context-pad-entry-background-color: var(--bio-surface);
+  --context-pad-entry-hover-background-color: var(--bio-surface-medium);
+
+  --element-dragger-color: var(--accent-color);
+  --element-selected-outline-stroke-color: var(--accent-color);
+  --element-selected-outline-secondary-stroke-color: var(--bio-canvas-accent-subtle);
+
+  --lasso-fill-color: color-mix(in srgb, var(--bio-canvas-accent) 15%, transparent);
+  --lasso-stroke-color: var(--element-selected-outline-stroke-color);
+
+  --palette-entry-color: var(--bio-text);
+  --palette-entry-hover-color: var(--bio-primary);
+  --palette-entry-selected-color: var(--bio-primary);
+  --palette-separator-color: var(--bio-border);
+  --palette-toggle-hover-background-color: var(--bio-surface-medium);
+  --palette-background-color: var(--bio-surface-subtle);
+  --palette-border-color: var(--bio-border);
+
+  --popup-font-family: "IBM Plex Sans", sans-serif;
+  --popup-font-size: 14px;
+  --popup-secondary-font-size: .9em;
+  --popup-header-entry-selected-color: var(--bio-primary);
+  --popup-header-font-weight: bolder;
+  --popup-header-group-divider-color: var(--bio-border);
+  --popup-background-color: var(--bio-surface-overlay);
+  --popup-border-color: transparent;
+  --popup-shadow-color: var(--bio-shadow);
+  /* translucent, so the thumb darkens whatever it scrolls over */
+  --popup-scrollbar-thumb-color: rgba(0, 0, 0, 0.2);
+  --popup-button-background-color: var(--bio-surface-overlay);
+  --popup-button-hover-background-color: var(--bio-surface-medium);
+  --popup-disabled-color: var(--bio-text-subtle);
+  --popup-description-color: var(--bio-text-subtle);
+  --popup-no-results-color: var(--bio-text-subtlest);
+  --popup-entry-title-color: var(--bio-text-subtlest);
+
+  --popup-entry-selected-background-color: var(--bio-selected-surface);
+  --popup-entry-selected-color: var(--bio-selected-text);
+  --popup-search-border-color: var(--bio-border);
+  --popup-search-focus-border-color: var(--bio-focus);
+  --popup-search-focus-background-color: var(--bio-focus-surface);
+  --popup-tab-color: var(--bio-text-subtlest);
+  --popup-tab-hover-color: var(--bio-text);
+  --popup-tab-active-color: var(--bio-text);
+  --popup-tab-active-border-color: var(--bio-primary);
+  --popup-tab-strip-border-color: var(--bio-border-disabled);
+  --popup-tab-focus-border-color: var(--bio-focus);
+
+  --resizer-fill-color: var(--bio-canvas-accent);
+  --resizer-stroke-color: var(--canvas-fill-color);
+
+  --search-font-family: "IBM Plex Sans", sans-serif;
+  --search-font-size: 14px;
+  --search-container-background-color: var(--bio-surface-overlay);
+  --search-shadow-color: var(--bio-shadow);
+  --search-input-border-color: var(--bio-border);
+  --search-input-focus-border-color: var(--bio-focus);
+  --search-input-focus-background-color: var(--bio-primary-surface);
+  --search-result-hover-background-color: var(--bio-surface-medium);
+  --search-result-secondary-color: var(--bio-text-subtlest);
+  --search-preselected-background-color: color-mix(in srgb, var(--bio-canvas-accent) 15%, transparent);
+
+  --shape-attach-allowed-stroke-color: var(--accent-color);
+  --shape-connect-allowed-fill-color: var(--bio-surface-subtle);
+  --shape-drop-allowed-fill-color: var(--bio-surface-subtle);
+  --shape-drop-not-allowed-fill-color: var(--bio-danger-surface-subtle);
+  --shape-resize-preview-stroke-color: var(--accent-color);
+
+  --snap-line-stroke-color: color-mix(in srgb, var(--bio-canvas-accent) 30%, transparent);
+
+  --space-tool-crosshair-stroke-color: var(--bio-text);
+
+  --tooltip-error-background-color: var(--bio-danger-surface-subtle);
+  --tooltip-error-border-color: var(--bio-danger);
+  --tooltip-error-color: var(--bio-danger);
+
+  --hover-tooltip-font-family: "IBM Plex Sans", sans-serif;
+  --hover-tooltip-font-size: 12px;
+  --hover-tooltip-secondary-font-size: 11px;
+  --hover-tooltip-background-color: var(--bio-surface-inverted);
+  --hover-tooltip-color: var(--bio-text-on-inverted);
+  --hover-tooltip-shadow-color: var(--bio-shadow-subtle);
+
+  --palette-tooltip-shortcut-background-color: var(--bio-surface-inverted-subtle);
+}
+
+/**
+ * SVG styles
+ */
+
+.djs-container svg.drop-not-ok {
+  background: var(--shape-drop-not-allowed-fill-color) !important;
+}
+
+.djs-container svg.new-parent {
+  background: var(--shape-drop-allowed-fill-color) !important;
+}
+
+.djs-container svg:focus {
+  outline-offset: -1px;
+}
+
+/**
+ * outline styles
+ */
+
+.djs-outline,
+.djs-selection-outline {
+  fill: none;
+  shape-rendering: geometricPrecision;
+  stroke-width: 2px;
+}
+
+.djs-outline {
+  visibility: hidden;
+}
+
+.djs-selection-outline {
+  stroke: var(--element-selected-outline-stroke-color);
+}
+
+.djs-element.selected .djs-outline {
+  visibility: visible;
+
+  stroke: var(--element-selected-outline-stroke-color);
+}
+
+.djs-connection.selected .djs-outline {
+  display: none;
+}
+
+.djs-multi-select .djs-element.selected .djs-outline,
+.djs-dragging-active-lasso .djs-element.selected .djs-outline {
+  stroke: var(--element-selected-outline-secondary-stroke-color);
+  display: block;
+}
+
+.djs-outline-hidden .djs-outline {
+  display: none !important;
+}
+
+.djs-shape.connect-ok .djs-visual > :nth-child(1) {
+  fill: var(--shape-connect-allowed-fill-color) !important;
+}
+
+.djs-shape.connect-not-ok .djs-visual > :nth-child(1),
+.djs-shape.drop-not-ok .djs-visual > :nth-child(1) {
+  fill: var(--shape-drop-not-allowed-fill-color) !important;
+}
+
+.djs-shape.new-parent .djs-visual > :nth-child(1) {
+  fill: var(--shape-drop-allowed-fill-color) !important;
+}
+
+
+/* Override move cursor during drop and connect */
+.drop-not-ok,
+.connect-not-ok,
+.drop-not-ok *,
+.connect-not-ok * {
+  cursor: not-allowed !important;
+}
+
+.drop-ok,
+.connect-ok,
+.drop-ok *,
+.connect-ok * {
+  cursor: default !important;
+}
+
+.djs-element.attach-ok .djs-visual > :nth-child(1) {
+  stroke-width: 5px !important;
+  stroke: var(--shape-attach-allowed-stroke-color) !important;
+}
+
+.djs-frame.connect-not-ok .djs-visual > :nth-child(1),
+.djs-frame.drop-not-ok .djs-visual > :nth-child(1) {
+  stroke-width: 3px !important;
+  stroke: var(--shape-drop-not-allowed-fill-color) !important;
+  fill: none !important;
+}
+
+/**
+* Selection box style
+*
+*/
+.djs-lasso-overlay {
+  fill: var(--lasso-fill-color);
+  stroke: var(--lasso-stroke-color);
+  stroke-width: 2px;
+  shape-rendering: geometricPrecision;
+  pointer-events: none;
+}
+
+/**
+ * Resize styles
+ */
+.djs-resize-overlay {
+  fill: none;
+
+  stroke-dasharray: 5 1 3 1;
+  stroke: var(--shape-resize-preview-stroke-color);
+
+  pointer-events: none;
+}
+
+.djs-resizer-hit {
+  fill: none;
+  pointer-events: all;
+}
+
+.djs-resizer-visual {
+  fill: var(--resizer-fill-color);
+  stroke-width: 1px;
+  stroke: var(--resizer-stroke-color);
+  shape-rendering: geometricPrecision;
+}
+
+.djs-resizer:hover .djs-resizer-visual {
+  stroke: var(--resizer-stroke-color);
+  stroke-opacity: 1;
+}
+
+.djs-cursor-resize-ns,
+.djs-resizer-n,
+.djs-resizer-s {
+  cursor: ns-resize;
+}
+
+.djs-cursor-resize-ew,
+.djs-resizer-e,
+.djs-resizer-w {
+  cursor: ew-resize;
+}
+
+.djs-cursor-resize-nwse,
+.djs-resizer-nw,
+.djs-resizer-se {
+  cursor: nwse-resize;
+}
+
+.djs-cursor-resize-nesw,
+.djs-resizer-ne,
+.djs-resizer-sw {
+  cursor: nesw-resize;
+}
+
+.djs-shape.djs-resizing > .djs-outline {
+  visibility: hidden !important;
+}
+
+.djs-shape.djs-resizing > .djs-resizer {
+  visibility: hidden;
+}
+
+.djs-dragger > .djs-resizer {
+  visibility: hidden;
+}
+
+/**
+ * drag styles
+ */
+.djs-dragger * {
+  fill: none !important;
+  stroke: var(--element-dragger-color) !important;
+}
+
+.djs-dragger tspan,
+.djs-dragger text {
+  fill: var(--element-dragger-color) !important;
+  stroke: none !important;
+}
+
+.djs-dragger marker circle,
+.djs-dragger marker path,
+.djs-dragger marker polygon,
+.djs-dragger marker polyline,
+.djs-dragger marker rect {
+  fill: var(--element-dragger-color) !important;
+  stroke: none !important;
+}
+
+.djs-dragger marker text,
+.djs-dragger marker tspan {
+  fill: none !important;
+  stroke: var(--element-dragger-color) !important;
+}
+
+.djs-dragging,
+.djs-dragging > * {
+  opacity: 0.3 !important;
+  pointer-events: none !important;
+}
+
+/**
+ * no pointer events for visual
+ */
+.djs-visual,
+.djs-outline {
+  pointer-events: none;
+}
+
+.djs-element.attach-ok .djs-hit {
+  stroke-width: 60px !important;
+}
+
+/**
+ * all pointer events for hit shape
+ */
+.djs-element > .djs-hit-all,
+.djs-element > .djs-hit-no-move {
+  pointer-events: all;
+}
+
+.djs-element > .djs-hit-stroke,
+.djs-element > .djs-hit-click-stroke {
+  pointer-events: stroke;
+}
+
+/**
+ * shape / connection basic styles
+ */
+.djs-connection .djs-visual {
+  stroke-width: 2px;
+  fill: none;
+}
+
+.djs-cursor-grab {
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
+}
+
+.djs-cursor-grabbing {
+  cursor: -webkit-grabbing;
+  cursor: -moz-grabbing;
+  cursor: grabbing;
+}
+
+.djs-cursor-crosshair {
+  cursor: crosshair;
+}
+
+.djs-cursor-move {
+  cursor: move;
+}
+
+.djs-cursor-resize-ns {
+  cursor: ns-resize;
+}
+
+.djs-cursor-resize-ew {
+  cursor: ew-resize;
+}
+
+
+/**
+ * snapping
+ */
+.djs-snap-line {
+  stroke: var(--snap-line-stroke-color);
+  stroke-linecap: round;
+  stroke-width: 2px;
+  pointer-events: none;
+}
+
+/**
+ * snapping
+ */
+.djs-crosshair {
+  stroke: var(--space-tool-crosshair-stroke-color);
+  stroke-linecap: round;
+  stroke-width: 1px;
+  pointer-events: none;
+  shape-rendering: geometricPrecision;
+  stroke-dasharray: 5, 5;
+}
+
+/**
+ * palette
+ */
+
+.djs-palette {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+
+  box-sizing: border-box;
+  width: 48px;
+}
+
+.djs-palette .separator {
+  margin: 5px;
+  padding-top: 5px;
+
+  border: none;
+  border-bottom: solid 1px var(--palette-separator-color);
+
+  clear: both;
+}
+
+.djs-palette .entry:before {
+  vertical-align: initial;
+}
+
+.djs-palette .djs-palette-toggle {
+  cursor: pointer;
+}
+
+.djs-palette .entry,
+.djs-palette .djs-palette-toggle {
+  color: var(--palette-entry-color);
+  font-size: 30px;
+
+  text-align: center;
+}
+
+.djs-palette .entry {
+  float: left;
+}
+
+.djs-palette .entry img {
+  max-width: 100%;
+}
+
+.djs-palette .djs-palette-entries:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.djs-palette .djs-palette-toggle:hover {
+  background: var(--palette-toggle-hover-background-color);
+}
+
+.djs-palette .entry:hover {
+  color: var(--palette-entry-hover-color);
+}
+
+.djs-palette .highlighted-entry {
+  color: var(--palette-entry-selected-color) !important;
+}
+
+.djs-palette .entry,
+.djs-palette .djs-palette-toggle {
+  width: 46px;
+  height: 46px;
+  line-height: 46px;
+  cursor: default;
+}
+
+/**
+ * Palette open / two-column layout is controlled via
+ * classes on the palette. Events to hook into palette
+ * changed life-cycle are available in addition.
+ */
+.djs-palette.two-column.open {
+  width: 94px;
+}
+
+.djs-palette:not(.open) .djs-palette-entries {
+  display: none;
+}
+
+.djs-palette:not(.open) {
+  overflow: hidden;
+}
+
+.djs-palette.open .djs-palette-toggle {
+  display: none;
+}
+
+.djs-hover-tooltip {
+  position: fixed;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 10px;
+  border-radius: var(--surface-border-radius);
+
+  background-color: var(--hover-tooltip-background-color);
+  color: var(--hover-tooltip-color);
+
+  font-family: var(--hover-tooltip-font-family);
+  font-size: var(--hover-tooltip-font-size);
+  line-height: 1.2;
+  white-space: nowrap;
+
+  pointer-events: none;
+  box-shadow: 0 1px 4px var(--hover-tooltip-shadow-color);
+}
+
+.djs-hover-tooltip--right {
+  transform: translateY(-50%);
+}
+
+.djs-hover-tooltip--top {
+  transform: translate(-50%, -100%);
+}
+
+.djs-palette-tooltip-shortcut {
+  padding: 1px 5px;
+
+  border-radius: var(--button-border-radius);
+
+  background-color: var(--palette-tooltip-shortcut-background-color);
+
+  font-family: monospace;
+  font-size: var(--hover-tooltip-secondary-font-size);
+  line-height: 1.2;
+}
+
+/**
+ * context-pad
+ */
+.djs-context-pad {
+  position: absolute;
+  display: none;
+  pointer-events: none;
+  line-height: 1;
+  width: 72px;
+  z-index: 100;
+}
+
+.djs-context-pad .entry {
+  width: 22px;
+  height: 22px;
+  text-align: center;
+  display: inline-block;
+  font-size: 22px;
+  margin: 0 2px 2px 0;
+
+  border-radius: 3px;
+
+  cursor: default;
+
+  background-color: var(--context-pad-entry-background-color);
+  box-shadow: 0 0 2px 1px var(--context-pad-entry-background-color);
+  pointer-events: all;
+  vertical-align: middle;
+}
+
+.djs-context-pad .entry:hover {
+  background: var(--context-pad-entry-hover-background-color);
+}
+
+.djs-context-pad.open {
+  display: block;
+}
+
+/**
+ * popup styles
+ */
+.djs-popup {
+  line-height: 1;
+  box-sizing: border-box;
+  background: var(--popup-background-color);
+  overflow: hidden;
+  position: fixed;
+  z-index: 200;
+  box-shadow: 0px 2px 6px var(--popup-shadow-color);
+  border: solid 1px var(--popup-border-color);
+  min-width: 120px;
+  max-width: 300px;
+  outline: none;
+  font-size: var(--popup-font-size);
+  font-family: var(--popup-font-family);
+}
+
+.djs-popup-search input {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: var(--popup-font-size);
+  padding: 3px 6px 3px 28px;
+  border-radius: var(--input-border-radius);
+  border: solid 1px var(--popup-search-border-color);
+  line-height: 21px;
+}
+
+.djs-popup-search input:focus {
+  background-color: var(--popup-search-focus-background-color);
+  border: solid 1px var(--popup-search-focus-border-color);
+  outline: none;
+}
+
+.djs-popup-header {
+  display: flex;
+  align-items: stretch;
+  line-height: 20px;
+  margin: 10px 12px 10px 12px;
+}
+
+.djs-popup-header .entry {
+  border-radius: 2px;
+}
+
+.djs-popup button.entry {
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.djs-popup-header .entry.active {
+  color: var(--popup-header-entry-selected-color);
+}
+
+.djs-popup-header .entry.disabled {
+  color: inherit;
+}
+
+.djs-popup-header-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.djs-popup-header-group .entry {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.djs-popup-header-group + .djs-popup-header-group:before {
+  content: '';
+  width: 1px;
+  height: 20px;
+  background: var(--popup-header-group-divider-color);
+  margin: 0 5px;
+}
+
+.djs-popup-search {
+  position: relative;
+  width: auto;
+  margin: 10px 12px;
+}
+
+.djs-popup-tabs-container {
+  position: relative;
+  border-bottom: solid 1px var(--popup-tab-strip-border-color);
+}
+
+/**
+ * The scroll control doubles as the edge fade: tabs scrolled past it fade out
+ * rather than being cut off behind an opaque block.
+ */
+.djs-popup-tabs-scroll {
+  appearance: none;
+  position: absolute;
+  top: 0;
+  bottom: 1px;
+  width: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  color: var(--popup-tab-color);
+  cursor: pointer;
+}
+
+.djs-popup-tabs-scroll:hover {
+  color: var(--popup-tab-hover-color);
+}
+
+.djs-popup-tabs-scroll-start {
+  left: 0;
+  justify-content: flex-start;
+  background: linear-gradient(to left, transparent, var(--popup-background-color) 60%);
+}
+
+.djs-popup-tabs-scroll-end {
+  right: 0;
+  justify-content: flex-end;
+  background: linear-gradient(to right, transparent, var(--popup-background-color) 60%);
+}
+
+.djs-popup-tabs-scroll-start svg {
+  transform: rotate(180deg);
+}
+
+.djs-popup-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 12px;
+
+  /* keep scrolled-to tabs clear of the scroll controls */
+  scroll-padding: 0 28px;
+  scrollbar-width: none;
+}
+
+.djs-popup-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.djs-popup-tab {
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-bottom: solid 2px transparent;
+  border-radius: 0;
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: var(--popup-font-size);
+  color: var(--popup-tab-color);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.djs-popup-tab:hover {
+  color: var(--popup-tab-hover-color);
+}
+
+.djs-popup-tab:focus-visible {
+  outline: solid 1px var(--popup-tab-focus-border-color);
+  outline-offset: -2px;
+}
+
+.djs-popup-tab[aria-selected="true"] {
+  color: var(--popup-tab-active-color);
+  border-bottom-color: var(--popup-tab-active-border-color);
+  font-weight: var(--popup-header-font-weight);
+}
+
+.djs-popup-title {
+  font-size: var(--popup-font-size);
+  font-weight: var(--popup-header-font-weight);
+  flex: 1;
+  margin: 0;
+}
+
+.djs-popup-breadcrumbs {
+  display: flex;
+  line-height: 20px;
+  margin: 10px 12px;
+}
+
+.djs-popup-breadcrumbs-item {
+  display: inline-flex;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  outline: none;
+  appearance: none;
+  color: var(--popup-description-color);
+  font: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.djs-popup-breadcrumbs-item--separator::before {
+  display: inline-block;
+  content: '/';
+  color: var(--popup-description-color);
+  margin: 0 4px;
+}
+
+.djs-popup-breadcrumbs-item:hover {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.djs-popup-breadcrumbs-item:focus-visible {
+  outline: 1px solid var(--popup-search-focus-border-color);
+  outline-offset: 2px;
+}
+
+.djs-popup-breadcrumbs-item--back {
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 2px 3px;
+  margin-right: 6px;
+  border: 1px solid var(--popup-search-border-color);
+  border-radius: 4px;
+}
+
+.djs-popup-breadcrumbs-item--back:hover {
+  background: var(--popup-button-hover-background-color);
+}
+
+.djs-popup-breadcrumbs-item--current {
+  font-weight: var(--popup-header-font-weight);
+  color: inherit;
+  cursor: default;
+}
+
+.djs-popup-breadcrumbs-item--current:hover {
+  text-decoration: none;
+}
+
+.djs-popup-entry-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  margin-left: 6px;
+}
+
+.djs-popup-entry-chevron {
+  display: flex;
+  align-items: center;
+  color: var(--popup-description-color);
+}
+
+.djs-popup-search-icon {
+  position: absolute;
+  left: 8px;
+  top: 7px;
+}
+
+.djs-popup-search-count {
+  margin: 0 12px;
+  font-size: var(--popup-secondary-font-size);
+  color: var(--popup-description-color);
+}
+
+.djs-popup-results {
+  margin: 7px 3px 7px 12px;
+  list-style: none;
+  max-height: 280px;
+  overflow: auto;
+  padding-right: 9px;
+}
+
+/**
+ * The results list is focusable (as a listbox holding
+ * `aria-activedescendant`) when there is no search field.
+ * The active entry is indicated via `.entry.selected`, so we hide
+ * the outline on the list container itself.
+ */
+.djs-popup-results:focus {
+  outline: none;
+}
+
+.djs-popup-group {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.djs-popup-body .entry,
+.djs-popup-body .entry-header {
+  padding: 5px 7px;
+  cursor: default;
+  border-radius: 4px;
+}
+
+.djs-popup-body .entry-header {
+  font-weight: var(--popup-header-font-weight);
+  color: var(--popup-entry-title-color);
+  padding-left: 0;
+}
+
+.djs-popup [class*="icon"] .djs-popup-label,
+.djs-popup-label:not(:first-child) {
+  margin-left: .5em;
+}
+
+.djs-popup [class*="icon"]:before,
+.djs-popup-entry-icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  font-size: 1.4em;
+  vertical-align: middle;
+}
+
+.djs-popup-body .entry-header:not(:first-child) {
+  margin-top: 8px;
+  margin-bottom: 2px;
+}
+
+.djs-popup-body .entry {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: min-content;
+}
+
+.djs-popup .entry.selected {
+  color: var(--popup-entry-selected-color);
+  background-color: var(--popup-entry-selected-background-color);
+}
+
+.djs-popup .entry.disabled {
+  color: var(--popup-disabled-color);
+  cursor: not-allowed;
+}
+
+.djs-popup-body .entry:not(:first-child) {
+  margin-top: 2px;
+}
+
+.djs-popup-entry-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.djs-popup-entry-description {
+  font-size: var(--popup-secondary-font-size);
+  margin-top: .25em;
+
+  color: var(--popup-description-color);
+}
+
+.djs-popup-label,
+.djs-popup-entry-description {
+  line-height: 1.4em;
+}
+
+.djs-popup .entry,
+.djs-popup .entry-header {
+  margin: 1px;
+}
+
+.djs-popup-body {
+  flex-direction: column;
+  width: auto;
+}
+
+.djs-popup *::-webkit-scrollbar {
+  width: 6px;
+}
+
+.djs-popup *::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background-color: var(--popup-scrollbar-thumb-color);
+}
+
+.djs-popup *::-webkit-scrollbar-track {
+  box-shadow: none;
+  background: transparent;
+  margin: 0;
+  padding: 5px;
+}
+
+.djs-popup-no-results {
+  padding: 0 12px 12px 12px;
+  color: var(--popup-no-results-color);
+}
+
+.djs-popup-footer {
+  display: flex;
+  padding: 5px 12px 7px 12px;
+  border-top: solid 1px var(--popup-border-color);
+}
+
+/**
+ * The footer holds the keyboard/assistive-technology reachable documentation
+ * link. Mouse users get the per-entry `.djs-popup-entry-docs` affordance on
+ * hover instead, so the (redundant) footer link is hidden while the results
+ * list is hovered and shown during keyboard navigation.
+ */
+.djs-popup-results:hover ~ .djs-popup-footer {
+  display: none;
+}
+
+.djs-popup-entry-docs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  visibility: hidden;
+  padding: 2px 3px;
+  color: var(--popup-description-color);
+  background: var(--popup-button-background-color);
+  border: 1px solid var(--popup-search-border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color .12s ease, border-color .12s ease, color .12s ease;
+}
+
+.djs-popup-body .entry:hover .djs-popup-entry-docs {
+  visibility: visible;
+}
+
+.djs-popup-body .entry .djs-popup-entry-docs:hover {
+  background: var(--popup-button-hover-background-color);
+}
+
+.djs-popup-entry-docs svg {
+  vertical-align: middle;
+}
+
+.djs-popup-footer-docs {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--popup-secondary-font-size);
+  color: var(--popup-description-color);
+  text-decoration: none;
+}
+
+.djs-popup-footer-docs:hover {
+  text-decoration: underline;
+}
+
+.djs-popup-footer-docs svg {
+  vertical-align: middle;
+  margin: 2px;
+}
+
+/**
+ *  palette styles
+ */
+.djs-palette {
+  background: var(--palette-background-color);
+  border: solid 1px var(--palette-border-color);
+  border-radius: var(--surface-border-radius);
+}
+
+/**
+ * bendpoints
+ */
+.djs-segment-dragger,
+.djs-bendpoint {
+  display: none;
+}
+
+.djs-segment-dragger .djs-visual {
+  display: none;
+
+  fill: var(--bendpoint-fill-color);
+  stroke: var(--bendpoint-stroke-color);
+  stroke-width: 1px;
+  stroke-opacity: 1;
+}
+
+.djs-segment-dragger:hover .djs-visual {
+  display: block;
+}
+
+.djs-bendpoint .djs-visual {
+  fill: var(--bendpoint-fill-color);
+  stroke: var(--bendpoint-stroke-color);
+  stroke-width: 1px;
+}
+
+.djs-segment-dragger:hover,
+.djs-bendpoints.hover .djs-segment-dragger,
+.djs-bendpoints.selected .djs-segment-dragger,
+.djs-bendpoint:hover,
+.djs-bendpoints.hover .djs-bendpoint,
+.djs-bendpoints.selected .djs-bendpoint {
+  display: block;
+}
+
+.djs-drag-active .djs-bendpoints * {
+  display: none;
+}
+
+.djs-bendpoints:not(.hover) .floating {
+  display: none;
+}
+
+.djs-bendpoint.floating:not(.positioned) {
+  display: none;
+}
+
+.djs-segment-dragger:hover .djs-visual,
+.djs-segment-dragger.djs-dragging .djs-visual,
+.djs-bendpoint:hover .djs-visual,
+.djs-bendpoint.floating .djs-visual {
+  fill: var(--bendpoint-fill-color);
+  stroke: var(--bendpoint-stroke-color);
+  stroke-opacity: 1;
+}
+
+.djs-bendpoint.floating .djs-hit {
+  pointer-events: none;
+}
+
+.djs-segment-dragger .djs-hit,
+.djs-bendpoint .djs-hit {
+  fill: none;
+  pointer-events: all;
+}
+
+.djs-segment-dragger.horizontal .djs-hit {
+  cursor: ns-resize;
+}
+
+.djs-segment-dragger.vertical .djs-hit {
+  cursor: ew-resize;
+}
+
+.djs-segment-dragger.djs-dragging .djs-hit {
+  pointer-events: none;
+}
+
+.djs-updating,
+.djs-updating > * {
+  pointer-events: none !important;
+}
+
+.djs-updating .djs-context-pad,
+.djs-updating .djs-outline,
+.djs-updating .djs-bendpoint,
+.djs-multi-select .djs-bendpoint,
+.djs-multi-select .djs-segment-dragger,
+.connect-ok .djs-bendpoint,
+.connect-not-ok .djs-bendpoint,
+.drop-ok .djs-bendpoint,
+.drop-not-ok .djs-bendpoint {
+  display: none !important;
+}
+
+.djs-segment-dragger.djs-dragging,
+.djs-bendpoint.djs-dragging {
+  display: block;
+  opacity: 1.0;
+}
+
+
+/**
+ * tooltips
+ */
+.djs-tooltip-error {
+  width: 160px;
+  padding: 6px;
+
+  background: var(--tooltip-error-background-color);
+  border: solid 1px var(--tooltip-error-border-color);
+  border-radius: var(--surface-border-radius);
+  color: var(--tooltip-error-color);
+  font-size: 12px;
+  line-height: 16px;
+
+  opacity: 0.75;
+}
+
+.djs-tooltip-error:hover {
+  opacity: 1;
+}
+
+
+/**
+ * search pad
+ */
+.djs-search-open .djs-context-pad {
+  display: none;
+}
+
+.djs-search-open .djs-connection.selected .djs-outline {
+  display: block;
+}
+
+.djs-search-container {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  width: 25%;
+  min-width: 300px;
+  max-width: 400px;
+  z-index: 10;
+
+  font-family: var(--search-font-family);
+  font-size: var(--search-font-size);
+  border-radius: var(--surface-border-radius);
+  box-shadow: 0px 2px 6px var(--search-shadow-color);
+}
+
+.djs-search-container:not(.open) {
+  display: none;
+}
+
+.djs-search-input {
+  position: relative;
+}
+
+.djs-search-input svg {
+  position: absolute;
+  left: 8px;
+  top: 7px;
+}
+
+.djs-search-input input {
+  font-size: var(--search-font-size);
+  width: 100%;
+  padding: 3px 6px 3px 28px;
+  border: 1px solid var(--search-input-border-color);
+  border-radius: var(--input-border-radius);
+  box-sizing: border-box;
+  line-height: 21px;
+}
+
+.djs-search-input input:focus {
+  background-color: var(--search-input-focus-background-color);
+  border: solid 1px var(--search-input-focus-border-color);
+  outline: none;
+}
+
+.djs-search-results {
+  position: relative;
+  overflow-y: auto;
+  max-height: 200px;
+  background: var(--search-container-background-color);
+}
+
+.djs-search-result {
+  padding: 6px 8px;
+}
+
+.djs-search-result-primary {
+  margin: 0 0 3px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.djs-search-result-secondary {
+  font-family: monospace;
+  margin: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--search-result-secondary-color);
+}
+
+.djs-search-result:hover {
+  background: var(--search-result-hover-background-color);
+}
+
+.djs-search-result-selected {
+  background: var(--search-result-hover-background-color);
+}
+
+.djs-search-result-selected:hover {
+  background: var(--search-result-hover-background-color);
+}
+
+.djs-search-open .djs-element .djs-outline {
+  fill: var(--search-preselected-background-color) !important;
+}
+
+/**
+ * hidden styles
+ */
+.djs-element-hidden,
+.djs-element-hidden .djs-hit,
+.djs-element-hidden .djs-outline,
+.djs-label-hidden .djs-label {
+  display: none !important;
+}
+
+.djs-element .djs-hit-stroke,
+.djs-element .djs-hit-click-stroke,
+.djs-element .djs-hit-all {
+  cursor: move;
+}
+/**
+ * Semantic tokens, copied from `@bpmn-io/theme` to style the components
+ * according to this theme.
+ *
+ * Names and values of the tokens should stay intact with the `@bpmn-io/theme`
+ * source of truth, to ensure matching styles and allow overrides with an
+ * alternative theme.
+ */
+.bio-theme-parent {
+  --bio-surface-subtle: hsl(225, 10%, 97%);
+  --bio-text-on-primary: hsl(0, 0%, 100%);
+  --bio-border: hsl(225, 10%, 75%);
+  --bio-primary: hsl(205, 100%, 40%);
+  --bio-focus: hsl(205, 100%, 40%);
+  --bio-radius-md: 3px;
+  --bio-radius-lg: 4px;
+}
+
+.bjs-container {
+  --bjs-font-family: Arial, sans-serif;
+
+  --accent-color: var(--bio-primary);
+
+  --breadcrumbs-font-family: var(--bjs-font-family);
+  --breadcrumbs-item-color: var(--accent-color);
+  --breadcrumbs-background-color: var(--bio-surface-subtle);
+  --breadcrumbs-border-color: var(--bio-border);
+  --breadcrumbs-focus-outline-color: var(--bio-focus);
+  --drilldown-fill-color: var(--bio-text-on-primary);
+  --drilldown-background-color: var(--accent-color);
+  --drilldown-focus-outline-color: var(--bio-focus);
+
+  --button-border-radius: var(--bio-radius-md);
+  --surface-border-radius: var(--bio-radius-lg);
+}
+
+.bjs-breadcrumbs {
+  position: absolute;
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  top: 20px;
+  left: 20px;
+  padding: 5px 10px;
+  margin: 0px;
+  font-family: var(--breadcrumbs-font-family);
+  font-size: 16px;
+  line-height: normal;
+  background-color: var(--breadcrumbs-background-color);
+  border: solid 1px var(--breadcrumbs-border-color);
+  border-radius: var(--surface-border-radius);
+  row-gap: 5px;
+}
+
+.bjs-breadcrumbs-shown .bjs-breadcrumbs {
+  display: flex;
+}
+
+.djs-palette-shown .bjs-breadcrumbs {
+  left: 90px;
+}
+
+.djs-palette-shown.djs-palette-two-column .bjs-breadcrumbs {
+  left: 140px;
+}
+
+.bjs-breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.bjs-breadcrumbs a.bjs-crumb {
+  cursor: pointer;
+  color: var(--breadcrumbs-item-color);
+  text-decoration: none;
+}
+
+.bjs-breadcrumbs a.bjs-crumb:focus-visible {
+  outline: solid 1px var(--breadcrumbs-focus-outline-color);
+  outline-offset: 1px;
+}
+
+.bjs-breadcrumbs li:not(:first-child)::before {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" /><path d="M0 0h24v24H0z" fill="none" /></svg>');
+  padding: 0 8px;
+  height: 1em;
+}
+
+.bjs-breadcrumbs .bjs-crumb {
+  display: inline-block;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bjs-drilldown {
+  width: 20px;
+  height: 20px;
+
+  padding: 0px;
+  margin-left: -20px;
+
+  cursor: pointer;
+  border: none;
+  border-radius: var(--button-border-radius);
+
+  fill: var(--drilldown-fill-color);
+  background-color: var(--drilldown-background-color);
+}
+
+.bjs-drilldown:focus-visible {
+  outline: solid 1px var(--drilldown-focus-outline-color);
+  outline-offset: 1px;
+}
+
+.bjs-drilldown-empty {
+  display: none;
+}
+
+.selected .bjs-drilldown-empty {
+  display: inherit;
+}
+
+[data-popup="align-elements"] .djs-popup-results {
+  display: flex;
+}
+
+[data-popup="align-elements"] .djs-popup-body [data-group] + [data-group] {
+  border-left: 1px solid var(--popup-border-color);
+}
+
+[data-popup="align-elements"] [data-group="align"] {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+[data-popup="align-elements"] .djs-popup-body .entry {
+  padding: 6px 8px;
+}
+
+[data-popup="align-elements"] .djs-popup-body .entry:not(:first-child) {
+  margin-top: 0;
+}
+
+[data-popup="align-elements"] .djs-popup-entry-icon {
+  display: block;
+  margin: 0;
+  height: 20px;
+  width: 20px;
+}
+
+</style>
+<style>
+/* Layout: single column reading width; the process canvas breaks out to full width as a white "paper" sheet; register + slices below. */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --fg: #151b26;
+  --muted: #566074;
+  --line: #d8dde6;
+  --accent: #23407a;
+  --focus: #e39b12;
+  --paper: #ffffff;
+  --rule: #1d4ed8;      --rule-bg: #dbe7fd;
+  --outcome: #b42318;   --outcome-bg: #fde2df;
+  --oversight: #6d3fc0; --oversight-bg: #ece4fb;
+  --execution: #0f766e; --execution-bg: #d5f2ec;
+  --sel-bg: #fff4dc;
+  --font-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10141b; --surface: #181e28; --fg: #e7ebf2; --muted: #9aa5b8; --line: #2c3544;
+    --accent: #9db8f0; --focus: #f2b440; --paper: #ffffff;
+    --rule: #8fb1ff; --rule-bg: #1d2b4d; --outcome: #ff9c90; --outcome-bg: #43201d;
+    --oversight: #c3a6ff; --oversight-bg: #2e2447; --execution: #6fd6c4; --execution-bg: #173a36;
+    --sel-bg: #3a2f14;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10141b; --surface: #181e28; --fg: #e7ebf2; --muted: #9aa5b8; --line: #2c3544;
+  --accent: #9db8f0; --focus: #f2b440; --paper: #ffffff;
+  --rule: #8fb1ff; --rule-bg: #1d2b4d; --outcome: #ff9c90; --outcome-bg: #43201d;
+  --oversight: #c3a6ff; --oversight-bg: #2e2447; --execution: #6fd6c4; --execution-bg: #173a36;
+  --sel-bg: #3a2f14;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 36px 64px; display: grid; gap: 40px; }
+header { display: grid; gap: 12px; max-width: 72ch; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: clamp(28px, 4.2vw, 40px); line-height: 1.1; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+h2 { font-size: 22px; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.lede { color: var(--muted); font-size: 16.5px; }
+.mono { font-family: var(--font-mono); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 4px 12px 4px 8px; font-size: 13px; font-weight: 500;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; font-family: inherit; }
+.chip .sw { width: 14px; height: 14px; border-radius: 3px; border: 2px solid; }
+.chip[aria-pressed="false"] { opacity: .45; }
+.chip:focus-visible, button:focus-visible, .row:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sw.rule { border-color: var(--rule); background: var(--rule-bg); }
+.sw.outcome { border-color: var(--outcome); background: var(--outcome-bg); }
+.sw.oversight { border-color: var(--oversight); background: var(--oversight-bg); }
+.sw.execution { border-color: var(--execution); background: var(--execution-bg); }
+
+.canvas-block { display: grid; gap: 10px; }
+.views { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; padding: 3px; background: var(--surface); gap: 3px; justify-self: start; }
+.views button { font: 600 14px var(--font-body); border: 0; background: transparent; color: var(--muted); padding: 7px 16px; border-radius: 7px; cursor: pointer; }
+.views button[aria-selected="true"] { background: var(--accent); color: var(--surface); }
+.views button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.viewnote { font-size: 14px; color: var(--muted); max-width: 78ch; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.tools { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn { font: 500 13px var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+  border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+.hint { font-size: 13px; color: var(--muted); }
+#canvas { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; height: min(68vh, 620px); min-height: 380px; overflow: hidden; }
+#canvas .djs-container { cursor: grab; }
+#canvas.slicing .djs-shape:not(.inslice):not(.keep) .djs-visual,
+#canvas.slicing .djs-connection:not(.inslice) .djs-visual { opacity: .16; }
+#canvas .djs-element.hl .djs-visual > :first-child { stroke: #e39b12 !important; stroke-width: 5px !important; }
+#canvas .djs-element.decision { cursor: pointer; }
+.loadmsg { padding: 24px; color: #566074; font-size: 14px; }
+
+.section { display: grid; gap: 16px; }
+.section-head { display: grid; gap: 6px; max-width: 72ch; }
+.section-head p { color: var(--muted); }
+
+/* slices */
+.slices { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+.slice { text-align: left; font: inherit; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px; display: grid; gap: 8px; align-content: start; cursor: pointer; min-width: 0; }
+.slice.rec { grid-column: 1 / -1; background: var(--sel-bg); }
+.slice:hover { border-color: var(--accent); }
+.slice[aria-pressed="true"] { border-color: var(--focus); box-shadow: 0 0 0 2px var(--focus) inset; }
+.slice .top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.slice .name { font-weight: 600; font-size: 16px; }
+.slice .ds { font-family: var(--font-mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+.slice .body { font-size: 14px; color: var(--muted); }
+.slice .pc { font-size: 13.5px; display: grid; gap: 2px; }
+.slice .pc b { font-weight: 600; color: var(--fg); }
+.tag { justify-self: start; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
+  background: var(--sel-bg); color: var(--fg); }
+
+/* register */
+.register { display: grid; gap: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.rhead, .row { display: grid; grid-template-columns: 58px minmax(0, 1.25fr) minmax(0, 1.5fr) minmax(0, 1.6fr) minmax(0, 1fr); gap: 16px; padding: 14px 16px; }
+.rhead { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); }
+.row { border-bottom: 1px solid var(--line); cursor: pointer; font-size: 14px; align-items: start; }
+.row:last-child { border-bottom: 0; }
+.row:hover { background: color-mix(in srgb, var(--sel-bg) 45%, transparent); }
+.row.sel { background: var(--sel-bg); }
+.row[hidden] { display: none !important; }
+.did { font-family: var(--font-mono); font-weight: 700; font-size: 13px; padding: 2px 6px; border-radius: 4px; border: 2px solid; justify-self: start; }
+.did.rule { color: var(--rule); border-color: var(--rule); background: var(--rule-bg); }
+.did.outcome { color: var(--outcome); border-color: var(--outcome); background: var(--outcome-bg); }
+.did.oversight { color: var(--oversight); border-color: var(--oversight); background: var(--oversight-bg); }
+.did.execution { color: var(--execution); border-color: var(--execution); background: var(--execution-bg); }
+.cell { display: grid; gap: 4px; min-width: 0; }
+.cell .t { font-weight: 600; }
+.cell .s { color: var(--muted); font-size: 13px; }
+.lbl { display: none; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.hyp { font-size: 13px; padding: 3px 8px; border: 1px dashed var(--line); border-radius: 6px; justify-self: start; }
+
+.notes { display: grid; gap: 8px; max-width: 78ch; font-size: 14px; color: var(--muted); }
+.notes ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.notes b { color: var(--fg); font-weight: 600; }
+
+.refs { display: grid; gap: 18px; max-width: 86ch; }
+.refs h3 { font-size: 12px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+.refs ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.refs li { padding-left: 2em; text-indent: -2em; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.refs a { color: var(--accent); }
+.refs .used { display: block; text-indent: 0; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+@media (max-width: 860px) {
+  .rhead { display: none; }
+  .row { grid-template-columns: 1fr; gap: 10px; }
+  .lbl { display: block; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Zero-person recruitment · BPMN 2.0 · vacancy to offer</div>
+    <h1>Hiring Decision Map</h1>
+    <p class="lede">The hiring process as a team of agents and two accountable humans would run it, at two levels of detail. The overview shows the standard hiring funnel. The detailed model breaks it open into 12 numbered decision points (D1–D12), coloured by type. Pick a slice below to see which part of the detailed model it covers.</p>
+  </header>
+
+  <section class="canvas-block" aria-label="Process diagram">
+    <div class="views" role="tablist" aria-label="Level of detail">
+      <button role="tab" id="tab-overview" aria-selected="true">Overview</button>
+      <button role="tab" id="tab-detail" aria-selected="false">Detailed model</button>
+    </div>
+    <p class="viewnote" id="viewnote"></p>
+    <div class="toolbar">
+      <div class="legend" id="legend" role="group" aria-label="Decision types">
+        <button class="chip" data-cat="rule" aria-pressed="true"><span class="sw rule"></span>Rule-setting</button>
+        <button class="chip" data-cat="outcome" aria-pressed="true"><span class="sw outcome"></span>Candidate outcome</button>
+        <button class="chip" data-cat="oversight" aria-pressed="true"><span class="sw oversight"></span>Oversight &amp; escalation</button>
+        <button class="chip" data-cat="execution" aria-pressed="true"><span class="sw execution"></span>Execution &amp; communication</button>
+      </div>
+      <div class="tools">
+        <button class="btn" id="zin" aria-label="Zoom in">+</button>
+        <button class="btn" id="zout" aria-label="Zoom out">−</button>
+        <button class="btn" id="fit">Whole process</button>
+        <button class="btn" id="clear">Show all</button>
+        <button class="btn" id="copy">Copy BPMN XML</button>
+      </div>
+    </div>
+    <div id="canvas"><div class="loadmsg">Loading diagram…</div></div>
+    <p class="hint" id="hint"></p>
+  </section>
+
+  <section class="section" aria-labelledby="slices-h">
+    <div class="section-head">
+      <h2 id="slices-h">Candidate slices</h2>
+      <p>Four ways to cut the process for the project. Click one to open the detailed model with that slice highlighted, and to filter the register.</p>
+    </div>
+    <div class="slices" id="slices"></div>
+  </section>
+
+  <section class="section" aria-labelledby="reg-h">
+    <div class="section-head">
+      <h2 id="reg-h">Decision register</h2>
+      <p>The last column is a starting hypothesis for the delegation boundary, to test with Cyberdune. It is not a conclusion.</p>
+    </div>
+    <div class="register" id="register">
+      <div class="rhead"><span>ID</span><span>Decision · default owner</span><span>Effect on the candidate</span><span>Legal hooks</span><span>Delegation question · hypothesis</span></div>
+    </div>
+  </section>
+
+  <section class="notes" aria-labelledby="notes-h">
+    <h2 id="notes-h" style="color:var(--fg)">Modelling choices</h2>
+    <ul>
+      <li><b>Two levels.</b> The overview is the general process to discuss with Cyberdune and use for context in Deliverable 1. The detailed model is for analysing the slice you choose. Each coloured overview step bundles the decision points shown in its label.</li>
+      <li><b>Reference model, not Cyberdune's current process.</b> Check in the client interview which of these tasks their agents already do and where their sign-off sits.</li>
+      <li><b>One candidate from "Application received" onwards.</b> The vacancy-level part runs once, and the flow after it shows the path of one applicant. A fuller model would use a multi-instance subprocess.</li>
+      <li><b>Every knock-out and score passes D7 in this map.</b> Whether an agent may skip that step is the delegation question itself, so the map keeps it open.</li>
+      <li><b>Decision log.</b> Every D-point is assumed to write the rule applied, the evidence used, the actor, a timestamp and the model or rule version. This record is what your 2-minute reconstruction criterion tests.</li>
+      <li><b>Legal hooks are pointers, not legal advice.</b> Under the Digital Omnibus (Regulation (EU) 2026/1744) the AI Act's Annex III duties apply from 2 December 2027. Full sources are in the <a href="#references" style="color:var(--accent)">References</a> below.</li>
+    </ul>
+  </section>
+  <section class="section" id="references" aria-labelledby="refs-h">
+    <div class="section-head">
+      <h2 id="refs-h">References</h2>
+      <p>APA 7 style. Legislation is linked to its permanent EUR-Lex or wetten.nl address. Check article numbers against the consolidated AI Act text, since the Digital Omnibus amended it.</p>
+    </div>
+    <div class="refs">
+      <div><h3>EU legislation</h3><ol>
+        <li>European Parliament &amp; Council of the European Union. (2016). Regulation (EU) 2016/679 on the protection of natural persons with regard to the processing of personal data and on the free movement of such data (General Data Protection Regulation). <i>Official Journal of the European Union</i>, L 119, 1–88. <a href="http://data.europa.eu/eli/reg/2016/679/oj" target="_blank" rel="noopener">http://data.europa.eu/eli/reg/2016/679/oj</a><span class="used">Used for: Art. 5(1)(c), 13–15, 22 — D1, D3, D4, D7, D11, D12</span></li>
+        <li>European Parliament &amp; Council of the European Union. (2023). Directive (EU) 2023/970 to strengthen the application of the principle of equal pay for equal work or work of equal value between men and women through pay transparency and enforcement mechanisms. <i>Official Journal of the European Union</i>, L 132, 21–44. <a href="http://data.europa.eu/eli/dir/2023/970/oj" target="_blank" rel="noopener">http://data.europa.eu/eli/dir/2023/970/oj</a><span class="used">Used for: Pay range for applicants, ban on pay-history questions — D10</span></li>
+        <li>European Parliament &amp; Council of the European Union. (2024). Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence (Artificial Intelligence Act). <i>Official Journal of the European Union</i>, L, 2024/1689. <a href="http://data.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noopener">http://data.europa.eu/eli/reg/2024/1689/oj</a><span class="used">Used for: Annex III(4)(a), Art. 9, 12–15, 26, 50, 86 — high-risk duties for recruitment systems</span></li>
+        <li>European Parliament &amp; Council of the European Union. (2026). Regulation (EU) 2026/1744 of 8 July 2026 amending Regulation (EU) 2024/1689 and Regulations (EU) 2018/1139 and (EU) 2023/1230 as regards the simplification of the implementation of harmonised rules on artificial intelligence (Digital Omnibus on AI). <i>Official Journal of the European Union</i>, L, 2026/1744. <a href="http://data.europa.eu/eli/reg/2026/1744/oj" target="_blank" rel="noopener">http://data.europa.eu/eli/reg/2026/1744/oj</a><span class="used">Used for: Annex III obligations apply from 2 December 2027</span></li>
+      </ol></div>
+      <div><h3>Case law and guidance</h3><ol>
+        <li>Article 29 Data Protection Working Party. (2018). <i>Guidelines on automated individual decision-making and profiling for the purposes of Regulation 2016/679</i> (WP251rev.01). Endorsed by the European Data Protection Board. <a href="https://ec.europa.eu/newsroom/article29/items/612053" target="_blank" rel="noopener">https://ec.europa.eu/newsroom/article29/items/612053</a><span class="used">Used for: What counts as meaningful human involvement — D6, D7</span></li>
+        <li>Court of Justice of the European Union. (2023). <i>OQ v Land Hessen (SCHUFA Holding AG)</i>, Case C-634/21, ECLI:EU:C:2023:957. <a href="https://curia.europa.eu/juris/liste.jsf?num=C-634/21" target="_blank" rel="noopener">https://curia.europa.eu/juris/liste.jsf?num=C-634/21</a><span class="used">Used for: An automated score can itself be a decision under GDPR Art. 22 — D4, D7</span></li>
+      </ol></div>
+      <div><h3>Dutch law and codes</h3><ol>
+        <li><i>Algemene wet gelijke behandeling</i> [General Equal Treatment Act]. (1994). <a href="https://wetten.overheid.nl/BWBR0006502" target="_blank" rel="noopener">https://wetten.overheid.nl/BWBR0006502</a><span class="used">Used for: Direct and indirect discrimination in selection criteria — D1, D3, D9</span></li>
+        <li><i>Wet gelijke behandeling op grond van handicap of chronische ziekte</i> [Equal Treatment on the Grounds of Disability or Chronic Illness Act]. (2003). <a href="https://wetten.overheid.nl/BWBR0014915" target="_blank" rel="noopener">https://wetten.overheid.nl/BWBR0014915</a><span class="used">Used for: Reasonable accommodation — D8</span></li>
+        <li><i>Wet gelijke behandeling op grond van leeftijd bij de arbeid</i> [Equal Treatment in Employment (Age Discrimination) Act]. (2004). <a href="https://wetten.overheid.nl/BWBR0016185" target="_blank" rel="noopener">https://wetten.overheid.nl/BWBR0016185</a><span class="used">Used for: Age-related criteria — D1</span></li>
+        <li>NVP. (2025). <i>NVP Sollicitatiecode</i> [Recruitment code]. Nederlandse Vereniging voor Personeelsmanagement &amp; Organisatieontwikkeling. <a href="https://www.nvp-hrnetwerk.nl/nl/sollicitatiecode" target="_blank" rel="noopener">https://www.nvp-hrnetwerk.nl/nl/sollicitatiecode</a><span class="used">Used for: Voluntary standard for candidate information and complaints — D9, D11</span></li>
+      </ol></div>
+      <div><h3>Modelling standard</h3><ol>
+        <li>Object Management Group. (2011). <i>Business Process Model and Notation (BPMN), Version 2.0</i>. <a href="https://www.omg.org/spec/BPMN/2.0/" target="_blank" rel="noopener">https://www.omg.org/spec/BPMN/2.0/</a><span class="used">Used for: Notation of both process models</span></li>
+      </ol></div>
+    </div>
+  </section>
+</div>
+
+<script type="text/plain" id="bpmn-xml"><?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" id="Defs_hiring" targetNamespace="http://example.org/hiring" exporter="hand-generated" exporterVersion="1.0">
+  <bpmn:collaboration id="Collab_hiring">
+    <bpmn:documentation>Semi-agentic hiring process, vacancy to offer. Decision points are numbered D1-D12 and colour-coded: blue = rule-setting, red = candidate outcome, purple = oversight/escalation, teal = execution/communication. Every decision point is assumed to write a record (rule applied, evidence, actor, timestamp) to the decision log.</bpmn:documentation>
+    <bpmn:participant id="P_org" name="Recruitment operation (zero-person company)" processRef="Proc_hiring" />
+    <bpmn:participant id="P_cand" name="Candidate" />
+    <bpmn:messageFlow id="m1" name="Outreach message" sourceRef="t_approach" targetRef="P_cand" />
+    <bpmn:messageFlow id="m2" name="Application" sourceRef="P_cand" targetRef="ev_app" />
+    <bpmn:messageFlow id="m3" name="Interview invitation" sourceRef="t_schedule" targetRef="P_cand" />
+    <bpmn:messageFlow id="m4" name="Rejection with explanation" sourceRef="t_sendrej" targetRef="P_cand" />
+    <bpmn:messageFlow id="m5" name="Request for explanation / review" sourceRef="P_cand" targetRef="ev_contest" />
+    <bpmn:messageFlow id="m6" name="Offer" sourceRef="t_sendoffer" targetRef="P_cand" />
+    <bpmn:messageFlow id="m7" name="Acceptance or refusal" sourceRef="P_cand" targetRef="ev_response" />
+    <bpmn:textAnnotation id="ann_log"><bpmn:text>Audit trail: every decision point D1–D12 writes a record to the decision log (rule or criterion applied, evidence used, agent or human who decided, timestamp, model/rule version).</bpmn:text></bpmn:textAnnotation>
+    <bpmn:textAnnotation id="ann_bypass"><bpmn:text>Delegation question: may D3/D4 outcomes bypass D7 sign-off (automatic rejection)?</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="as_bypass" sourceRef="t_signoff" targetRef="ann_bypass" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_hiring" name="Hiring: vacancy to offer" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="L_hm" name="Hiring manager (human)">
+        <bpmn:flowNodeRef>start_need</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_define</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>g_approve</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_interview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_assess</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>g_offer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_terms</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_rec" name="Recruiter (human, accountable)">
+        <bpmn:flowNodeRef>t_criteria</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_review</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_signoff</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>g_invite</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_humanreview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>end_review</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_sendoffer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ev_response</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>g_accepted</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>end_hired</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>end_declined</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_src" name="Sourcing agent">
+        <bpmn:flowNodeRef>t_publish</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_search</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_approach</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_scr" name="Screening agent">
+        <bpmn:flowNodeRef>ev_app</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_parse</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_knock</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>g_knock</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_score</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>g_band</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_sch" name="Scheduling agent">
+        <bpmn:flowNodeRef>t_schedule</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_com" name="Communication agent">
+        <bpmn:flowNodeRef>t_reject</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_sendrej</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>g_evrej</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ev_timer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>end_rejected</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ev_contest</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_draftoffer</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="start_need" name="Hiring need identified">
+      <bpmn:outgoing>f1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="t_define" name="Define role and requirements">
+      <bpmn:incoming>f1</bpmn:incoming>
+      <bpmn:outgoing>f2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="t_criteria" name="D1 · Translate requirements into selection criteria">
+      <bpmn:documentation>D1 (rule). Default owner in this map: Recruiter, approved by hiring manager. Effect on candidate: Sets the rules every later agent applies. One biased criterion is applied to every applicant. Legal hooks: Equal treatment law (AWGB, WGBL): criteria must be job-related and proportionate, including indirect effects. AI Act Art. 9 (risk management). GDPR Art. 5(1)(c) (data minimisation). Delegation question: Can an agent draft criteria from the job description, and who must approve them before they become machine-readable rules?</bpmn:documentation>
+      <bpmn:incoming>f2</bpmn:incoming>
+      <bpmn:incoming>f4</bpmn:incoming>
+      <bpmn:outgoing>f3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="g_approve" name="Vacancy and criteria approved?">
+      <bpmn:incoming>f3</bpmn:incoming>
+      <bpmn:outgoing>f4</bpmn:outgoing>
+      <bpmn:outgoing>f5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="t_publish" name="Publish vacancy on job channels">
+      <bpmn:incoming>f5</bpmn:incoming>
+      <bpmn:outgoing>f6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="t_search" name="D2 · Search talent pools and select prospects">
+      <bpmn:documentation>D2 (outcome). Default owner in this map: Sourcing agent. Effect on candidate: Decides who hears about the job at all. People who are never approached never apply, so they are never rejected and have nothing to contest. Legal hooks: AI Act Annex III(4)(a) names targeted job advertisements explicitly. Equal treatment law (who gets targeted). GDPR Art. 14 (informing people whose data was collected indirectly). Delegation question: May the agent choose whom to approach on its own? How do you measure adverse impact on people who were never contacted?</bpmn:documentation>
+      <bpmn:incoming>f6</bpmn:incoming>
+      <bpmn:outgoing>f7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="t_approach" name="Approach selected prospects">
+      <bpmn:incoming>f7</bpmn:incoming>
+      <bpmn:outgoing>f8</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:intermediateCatchEvent id="ev_app" name="Application received">
+      <bpmn:incoming>f8</bpmn:incoming>
+      <bpmn:outgoing>f9</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="med_ev_app" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="t_parse" name="Parse CV and extract evidence">
+      <bpmn:incoming>f9</bpmn:incoming>
+      <bpmn:outgoing>f10</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:businessRuleTask id="t_knock" name="D3 · Check knock-out criteria">
+      <bpmn:documentation>D3 (outcome). Default owner in this map: Screening agent. Effect on candidate: A fail ends the application. Legal hooks: GDPR Art. 22 (a rejection based solely on automated processing). AI Act Art. 12 (logging) and Art. 14 (human oversight). Equal treatment law: language, degree and experience requirements can discriminate indirectly. Delegation question: May a failed hard requirement, such as no work permit, lead to automatic rejection, or does every rejection need D7?</bpmn:documentation>
+      <bpmn:incoming>f10</bpmn:incoming>
+      <bpmn:outgoing>f11</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:exclusiveGateway id="g_knock" name="Meets knock-out criteria?">
+      <bpmn:incoming>f11</bpmn:incoming>
+      <bpmn:outgoing>f12</bpmn:outgoing>
+      <bpmn:outgoing>f13</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:businessRuleTask id="t_score" name="D4 · Score against weighted criteria">
+      <bpmn:documentation>D4 (outcome). Default owner in this map: Screening agent. Effect on candidate: Sets the ranking, and so decides who reaches the shortlist. Legal hooks: AI Act Arts. 13–15 (transparency, oversight, accuracy). Adverse-impact testing under equal treatment law. GDPR Art. 22. Delegation question: Which scores are safe to act on without a human check? How is each score explained in terms of criteria and evidence?</bpmn:documentation>
+      <bpmn:incoming>f12</bpmn:incoming>
+      <bpmn:outgoing>f14</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:exclusiveGateway id="g_band" name="D5 · Clear case or escalate?">
+      <bpmn:documentation>D5 (oversight). Default owner in this map: Screening agent, applying a rule set by a human. Effect on candidate: Decides which candidates a human ever sees. Legal hooks: AI Act Art. 14(4): overseers must be able to understand the output, spot anomalies and resist automation bias. Art. 26(2): the deployer assigns competent people to oversight. Delegation question: Which triggers force escalation (confidence, score band, missing data, proxies for protected traits), and who sets them?</bpmn:documentation>
+      <bpmn:incoming>f14</bpmn:incoming>
+      <bpmn:outgoing>f15</bpmn:outgoing>
+      <bpmn:outgoing>f16</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="t_review" name="D6 · Review escalated case">
+      <bpmn:documentation>D6 (oversight). Default owner in this map: Recruiter. Effect on candidate: Final say on hard cases. Legal hooks: Meaningful human involvement: EDPB (WP29) guidelines on automated decision-making, and CJEU C-634/21 (SCHUFA). Delegation question: What must the recruiter see to judge independently rather than simply confirm the agent's view?</bpmn:documentation>
+      <bpmn:incoming>f15</bpmn:incoming>
+      <bpmn:outgoing>f17</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="t_signoff" name="D7 · Sign off shortlist and rejections">
+      <bpmn:documentation>D7 (outcome). Default owner in this map: Recruiter. Effect on candidate: The formal decision someone is accountable for. Legal hooks: GDPR Art. 22: rubber-stamping in bulk can still count as solely automated. AI Act Art. 26 (deployer obligations) and Art. 86 (right to explanation). Delegation question: Is batch sign-off of agent proposals meaningful oversight? What minimum review, or sample, makes it real?</bpmn:documentation>
+      <bpmn:incoming>f13</bpmn:incoming>
+      <bpmn:incoming>f16</bpmn:incoming>
+      <bpmn:incoming>f17</bpmn:incoming>
+      <bpmn:outgoing>f18</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="g_invite" name="Invite to interview?">
+      <bpmn:incoming>f18</bpmn:incoming>
+      <bpmn:outgoing>f19</bpmn:outgoing>
+      <bpmn:outgoing>f20</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="t_schedule" name="D8 · Propose slots and book interview">
+      <bpmn:documentation>D8 (execution). Default owner in this map: Scheduling agent. Effect on candidate: Little direct impact, but rigid time slots can disadvantage candidates with care duties or a disability. Legal hooks: Disability equal treatment law (WGBH/CZ): reasonable accommodation. GDPR data minimisation. Delegation question: Can the agent decide fully on its own, as long as accommodation requests go to a human?</bpmn:documentation>
+      <bpmn:incoming>f19</bpmn:incoming>
+      <bpmn:outgoing>f21</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="t_interview" name="Conduct interview(s)">
+      <bpmn:incoming>f21</bpmn:incoming>
+      <bpmn:outgoing>f22</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="t_assess" name="D9 · Assess candidate and decide on hire">
+      <bpmn:documentation>D9 (outcome). Default owner in this map: Hiring manager. Effect on candidate: The selection decision. Legal hooks: Equal treatment law, and documentation to justify the choice. NVP Sollicitatiecode (voluntary Dutch recruitment code). Delegation question: May an agent summarise interview notes or make a recommendation? If so, how is that recommendation logged?</bpmn:documentation>
+      <bpmn:incoming>f22</bpmn:incoming>
+      <bpmn:outgoing>f23</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="g_offer" name="Make an offer?">
+      <bpmn:incoming>f23</bpmn:incoming>
+      <bpmn:outgoing>f24</bpmn:outgoing>
+      <bpmn:outgoing>f25</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="t_reject" name="D11 · Draft rejection with reasons">
+      <bpmn:documentation>D11 (execution). Default owner in this map: Communication agent. Effect on candidate: What the candidate learns about why they were rejected. Legal hooks: GDPR Arts. 13–15 and 22(3). AI Act Art. 86 (explanation of individual decisions) and Art. 50(1) (disclosure when people interact with an AI system). NVP Sollicitatiecode. Delegation question: May the agent send rejections without review if the reasons come from the decision log? How do you check that the stated reasons match the real ones?</bpmn:documentation>
+      <bpmn:incoming>f20</bpmn:incoming>
+      <bpmn:incoming>f25</bpmn:incoming>
+      <bpmn:outgoing>f26</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="t_sendrej" name="Send rejection">
+      <bpmn:incoming>f26</bpmn:incoming>
+      <bpmn:outgoing>f27</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:eventBasedGateway id="g_evrej" name="">
+      <bpmn:incoming>f27</bpmn:incoming>
+      <bpmn:outgoing>f28</bpmn:outgoing>
+      <bpmn:outgoing>f30</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="ev_timer" name="Objection period ends">
+      <bpmn:incoming>f28</bpmn:incoming>
+      <bpmn:outgoing>f29</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="ted_ev_timer"><bpmn:timeDuration xsi:type="bpmn:tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">P30D</bpmn:timeDuration></bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="end_rejected" name="Candidate rejected">
+      <bpmn:incoming>f29</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="ev_contest" name="Explanation or human review requested">
+      <bpmn:incoming>f30</bpmn:incoming>
+      <bpmn:outgoing>f31</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="med_ev_contest" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:userTask id="t_humanreview" name="D12 · Human review of contested decision">
+      <bpmn:documentation>D12 (oversight). Default owner in this map: Recruiter. Effect on candidate: A second look that can reverse the outcome. Legal hooks: GDPR Art. 22(3): the right to human intervention, to give one's own view and to contest the decision. AI Act Art. 86. Delegation question: Who reviews (someone other than the recruiter who signed off?), within what time limit, and what counts as a reversal?</bpmn:documentation>
+      <bpmn:incoming>f31</bpmn:incoming>
+      <bpmn:outgoing>f32</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="end_review" name="Decision upheld or revised">
+      <bpmn:incoming>f32</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="t_terms" name="D10 · Set offer terms">
+      <bpmn:documentation>D10 (outcome). Default owner in this map: Hiring manager. Effect on candidate: Pay and conditions. Legal hooks: EU Pay Transparency Directive 2023/970: pay range shared with applicants, no questions about pay history. Equal pay. Delegation question: Can an agent propose a salary within the band without reproducing historical pay gaps?</bpmn:documentation>
+      <bpmn:incoming>f24</bpmn:incoming>
+      <bpmn:outgoing>f33</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="t_draftoffer" name="Draft offer letter">
+      <bpmn:incoming>f33</bpmn:incoming>
+      <bpmn:outgoing>f34</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="t_sendoffer" name="Approve and send offer">
+      <bpmn:incoming>f34</bpmn:incoming>
+      <bpmn:outgoing>f35</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateCatchEvent id="ev_response" name="Candidate responds">
+      <bpmn:incoming>f35</bpmn:incoming>
+      <bpmn:outgoing>f36</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="med_ev_response" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="g_accepted" name="Offer accepted?">
+      <bpmn:incoming>f36</bpmn:incoming>
+      <bpmn:outgoing>f37</bpmn:outgoing>
+      <bpmn:outgoing>f38</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="end_hired" name="Position filled">
+      <bpmn:incoming>f37</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="end_declined" name="Offer declined">
+      <bpmn:incoming>f38</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="f1" sourceRef="start_need" targetRef="t_define" />
+    <bpmn:sequenceFlow id="f2" sourceRef="t_define" targetRef="t_criteria" />
+    <bpmn:sequenceFlow id="f3" sourceRef="t_criteria" targetRef="g_approve" />
+    <bpmn:sequenceFlow id="f4" name="No, revise" sourceRef="g_approve" targetRef="t_criteria" />
+    <bpmn:sequenceFlow id="f5" name="Yes" sourceRef="g_approve" targetRef="t_publish" />
+    <bpmn:sequenceFlow id="f6" sourceRef="t_publish" targetRef="t_search" />
+    <bpmn:sequenceFlow id="f7" sourceRef="t_search" targetRef="t_approach" />
+    <bpmn:sequenceFlow id="f8" sourceRef="t_approach" targetRef="ev_app" />
+    <bpmn:sequenceFlow id="f9" sourceRef="ev_app" targetRef="t_parse" />
+    <bpmn:sequenceFlow id="f10" sourceRef="t_parse" targetRef="t_knock" />
+    <bpmn:sequenceFlow id="f11" sourceRef="t_knock" targetRef="g_knock" />
+    <bpmn:sequenceFlow id="f12" name="Yes" sourceRef="g_knock" targetRef="t_score" />
+    <bpmn:sequenceFlow id="f13" name="No: proposed rejection" sourceRef="g_knock" targetRef="t_signoff" />
+    <bpmn:sequenceFlow id="f14" sourceRef="t_score" targetRef="g_band" />
+    <bpmn:sequenceFlow id="f15" name="Borderline or low confidence" sourceRef="g_band" targetRef="t_review" />
+    <bpmn:sequenceFlow id="f16" name="Clear pass or clear fail" sourceRef="g_band" targetRef="t_signoff" />
+    <bpmn:sequenceFlow id="f17" sourceRef="t_review" targetRef="t_signoff" />
+    <bpmn:sequenceFlow id="f18" sourceRef="t_signoff" targetRef="g_invite" />
+    <bpmn:sequenceFlow id="f19" name="Yes" sourceRef="g_invite" targetRef="t_schedule" />
+    <bpmn:sequenceFlow id="f20" name="No" sourceRef="g_invite" targetRef="t_reject" />
+    <bpmn:sequenceFlow id="f21" sourceRef="t_schedule" targetRef="t_interview" />
+    <bpmn:sequenceFlow id="f22" sourceRef="t_interview" targetRef="t_assess" />
+    <bpmn:sequenceFlow id="f23" sourceRef="t_assess" targetRef="g_offer" />
+    <bpmn:sequenceFlow id="f24" name="Yes" sourceRef="g_offer" targetRef="t_terms" />
+    <bpmn:sequenceFlow id="f25" name="No" sourceRef="g_offer" targetRef="t_reject" />
+    <bpmn:sequenceFlow id="f26" sourceRef="t_reject" targetRef="t_sendrej" />
+    <bpmn:sequenceFlow id="f27" sourceRef="t_sendrej" targetRef="g_evrej" />
+    <bpmn:sequenceFlow id="f28" sourceRef="g_evrej" targetRef="ev_timer" />
+    <bpmn:sequenceFlow id="f29" sourceRef="ev_timer" targetRef="end_rejected" />
+    <bpmn:sequenceFlow id="f30" sourceRef="g_evrej" targetRef="ev_contest" />
+    <bpmn:sequenceFlow id="f31" sourceRef="ev_contest" targetRef="t_humanreview" />
+    <bpmn:sequenceFlow id="f32" sourceRef="t_humanreview" targetRef="end_review" />
+    <bpmn:sequenceFlow id="f33" sourceRef="t_terms" targetRef="t_draftoffer" />
+    <bpmn:sequenceFlow id="f34" sourceRef="t_draftoffer" targetRef="t_sendoffer" />
+    <bpmn:sequenceFlow id="f35" sourceRef="t_sendoffer" targetRef="ev_response" />
+    <bpmn:sequenceFlow id="f36" sourceRef="ev_response" targetRef="g_accepted" />
+    <bpmn:sequenceFlow id="f37" name="Yes" sourceRef="g_accepted" targetRef="end_hired" />
+    <bpmn:sequenceFlow id="f38" name="No" sourceRef="g_accepted" targetRef="end_declined" />
+    <bpmn:dataStoreReference id="ds_log" name="Decision log (audit trail)" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_1">
+    <bpmndi:BPMNPlane id="Plane_1" bpmnElement="Collab_hiring">
+      <bpmndi:BPMNShape id="P_org_di" bpmnElement="P_org" isHorizontal="true"><dc:Bounds x="0" y="120" width="3900" height="880" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_hm_di" bpmnElement="L_hm" isHorizontal="true"><dc:Bounds x="30" y="120" width="3870" height="140" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_rec_di" bpmnElement="L_rec" isHorizontal="true"><dc:Bounds x="30" y="260" width="3870" height="150" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_src_di" bpmnElement="L_src" isHorizontal="true"><dc:Bounds x="30" y="410" width="3870" height="130" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_scr_di" bpmnElement="L_scr" isHorizontal="true"><dc:Bounds x="30" y="540" width="3870" height="150" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_sch_di" bpmnElement="L_sch" isHorizontal="true"><dc:Bounds x="30" y="690" width="3870" height="130" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_com_di" bpmnElement="L_com" isHorizontal="true"><dc:Bounds x="30" y="820" width="3870" height="180" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P_cand_di" bpmnElement="P_cand" isHorizontal="true"><dc:Bounds x="0" y="1070" width="3900" height="70" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="start_need_di" bpmnElement="start_need"><dc:Bounds x="132" y="172" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_define_di" bpmnElement="t_define"><dc:Bounds x="235" y="150" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_criteria_di" bpmnElement="t_criteria" bioc:stroke="#1d4ed8" bioc:fill="#dbe7fd" color:background-color="#dbe7fd" color:border-color="#1d4ed8"><dc:Bounds x="375" y="295" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_approve_di" bpmnElement="g_approve" isMarkerVisible="true"><dc:Bounds x="545" y="165" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_publish_di" bpmnElement="t_publish"><dc:Bounds x="655" y="435" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_search_di" bpmnElement="t_search" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="795" y="435" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_approach_di" bpmnElement="t_approach"><dc:Bounds x="935" y="435" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ev_app_di" bpmnElement="ev_app"><dc:Bounds x="1112" y="597" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="1080" y="563" width="100" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_parse_di" bpmnElement="t_parse"><dc:Bounds x="1215" y="575" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_knock_di" bpmnElement="t_knock" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="1355" y="575" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_knock_di" bpmnElement="g_knock" isMarkerVisible="true"><dc:Bounds x="1525" y="590" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="1500" y="556" width="100" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_score_di" bpmnElement="t_score" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="1635" y="575" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_band_di" bpmnElement="g_band" isMarkerVisible="true" bioc:stroke="#6d3fc0" bioc:fill="#ece4fb" color:background-color="#ece4fb" color:border-color="#6d3fc0"><dc:Bounds x="1805" y="590" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_review_di" bpmnElement="t_review" bioc:stroke="#6d3fc0" bioc:fill="#ece4fb" color:background-color="#ece4fb" color:border-color="#6d3fc0"><dc:Bounds x="1915" y="295" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_signoff_di" bpmnElement="t_signoff" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="2055" y="295" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_invite_di" bpmnElement="g_invite" isMarkerVisible="true"><dc:Bounds x="2225" y="310" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="2200" y="276" width="100" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_schedule_di" bpmnElement="t_schedule" bioc:stroke="#0f766e" bioc:fill="#d5f2ec" color:background-color="#d5f2ec" color:border-color="#0f766e"><dc:Bounds x="2335" y="715" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_interview_di" bpmnElement="t_interview"><dc:Bounds x="2475" y="150" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_assess_di" bpmnElement="t_assess" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="2615" y="150" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_offer_di" bpmnElement="g_offer" isMarkerVisible="true"><dc:Bounds x="2785" y="165" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="2760" y="131" width="100" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_reject_di" bpmnElement="t_reject" bioc:stroke="#0f766e" bioc:fill="#d5f2ec" color:background-color="#d5f2ec" color:border-color="#0f766e"><dc:Bounds x="2475" y="860" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_sendrej_di" bpmnElement="t_sendrej"><dc:Bounds x="2615" y="860" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_evrej_di" bpmnElement="g_evrej"><dc:Bounds x="2785" y="875" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ev_timer_di" bpmnElement="ev_timer"><dc:Bounds x="2932" y="882" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_rejected_di" bpmnElement="end_rejected"><dc:Bounds x="3072" y="882" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ev_contest_di" bpmnElement="ev_contest"><dc:Bounds x="2932" y="947" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="2820" y="971" width="100" height="40" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_humanreview_di" bpmnElement="t_humanreview" bioc:stroke="#6d3fc0" bioc:fill="#ece4fb" color:background-color="#ece4fb" color:border-color="#6d3fc0"><dc:Bounds x="3035" y="295" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_review_di" bpmnElement="end_review"><dc:Bounds x="3212" y="317" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_terms_di" bpmnElement="t_terms" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="2895" y="150" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_draftoffer_di" bpmnElement="t_draftoffer"><dc:Bounds x="3175" y="860" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="t_sendoffer_di" bpmnElement="t_sendoffer"><dc:Bounds x="3315" y="295" width="110" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ev_response_di" bpmnElement="ev_response"><dc:Bounds x="3492" y="317" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="3460" y="283" width="100" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="g_accepted_di" bpmnElement="g_accepted" isMarkerVisible="true"><dc:Bounds x="3625" y="310" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="3600" y="276" width="100" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_hired_di" bpmnElement="end_hired"><dc:Bounds x="3772" y="317" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="3812" y="327" width="90" height="16" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="end_declined_di" bpmnElement="end_declined"><dc:Bounds x="3772" y="362" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="3812" y="372" width="90" height="16" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ds_log_di" bpmnElement="ds_log"><dc:Bounds x="1245" y="20" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ann_log_di" bpmnElement="ann_log"><dc:Bounds x="1315" y="18" width="420" height="56" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ann_bypass_di" bpmnElement="ann_bypass"><dc:Bounds x="1985" y="142" width="250" height="56" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="as_bypass_di" bpmnElement="as_bypass"><di:waypoint x="2110" y="295" /><di:waypoint x="2110" y="198" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f1_di" bpmnElement="f1"><di:waypoint x="168" y="190" /><di:waypoint x="235" y="190" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f2_di" bpmnElement="f2"><di:waypoint x="345" y="190" /><di:waypoint x="360" y="190" /><di:waypoint x="360" y="335" /><di:waypoint x="375" y="335" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f3_di" bpmnElement="f3"><di:waypoint x="485" y="335" /><di:waypoint x="515" y="335" /><di:waypoint x="515" y="190" /><di:waypoint x="545" y="190" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f4_di" bpmnElement="f4"><di:waypoint x="570" y="165" /><di:waypoint x="570" y="134" /><di:waypoint x="430" y="134" /><di:waypoint x="430" y="295" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f5_di" bpmnElement="f5"><di:waypoint x="595" y="190" /><di:waypoint x="625" y="190" /><di:waypoint x="625" y="475" /><di:waypoint x="655" y="475" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f6_di" bpmnElement="f6"><di:waypoint x="765" y="475" /><di:waypoint x="795" y="475" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f7_di" bpmnElement="f7"><di:waypoint x="905" y="475" /><di:waypoint x="935" y="475" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f8_di" bpmnElement="f8"><di:waypoint x="1045" y="475" /><di:waypoint x="1078" y="475" /><di:waypoint x="1078" y="615" /><di:waypoint x="1112" y="615" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f9_di" bpmnElement="f9"><di:waypoint x="1148" y="615" /><di:waypoint x="1215" y="615" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f10_di" bpmnElement="f10"><di:waypoint x="1325" y="615" /><di:waypoint x="1355" y="615" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f11_di" bpmnElement="f11"><di:waypoint x="1465" y="615" /><di:waypoint x="1525" y="615" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f12_di" bpmnElement="f12"><di:waypoint x="1575" y="615" /><di:waypoint x="1635" y="615" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f13_di" bpmnElement="f13"><di:waypoint x="1550" y="640" /><di:waypoint x="1550" y="678" /><di:waypoint x="2130" y="678" /><di:waypoint x="2130" y="375" /><bpmndi:BPMNLabel><dc:Bounds x="1558" y="645" width="110" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f14_di" bpmnElement="f14"><di:waypoint x="1745" y="615" /><di:waypoint x="1805" y="615" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f15_di" bpmnElement="f15"><di:waypoint x="1830" y="590" /><di:waypoint x="1830" y="335" /><di:waypoint x="1915" y="335" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f16_di" bpmnElement="f16"><di:waypoint x="1855" y="615" /><di:waypoint x="2090" y="615" /><di:waypoint x="2090" y="375" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f17_di" bpmnElement="f17"><di:waypoint x="2025" y="335" /><di:waypoint x="2055" y="335" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f18_di" bpmnElement="f18"><di:waypoint x="2165" y="335" /><di:waypoint x="2225" y="335" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f19_di" bpmnElement="f19"><di:waypoint x="2275" y="335" /><di:waypoint x="2305" y="335" /><di:waypoint x="2305" y="755" /><di:waypoint x="2335" y="755" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f20_di" bpmnElement="f20"><di:waypoint x="2250" y="360" /><di:waypoint x="2250" y="900" /><di:waypoint x="2475" y="900" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f21_di" bpmnElement="f21"><di:waypoint x="2445" y="755" /><di:waypoint x="2460" y="755" /><di:waypoint x="2460" y="190" /><di:waypoint x="2475" y="190" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f22_di" bpmnElement="f22"><di:waypoint x="2585" y="190" /><di:waypoint x="2615" y="190" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f23_di" bpmnElement="f23"><di:waypoint x="2725" y="190" /><di:waypoint x="2785" y="190" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f24_di" bpmnElement="f24"><di:waypoint x="2835" y="190" /><di:waypoint x="2895" y="190" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f25_di" bpmnElement="f25"><di:waypoint x="2810" y="215" /><di:waypoint x="2810" y="836" /><di:waypoint x="2530" y="836" /><di:waypoint x="2530" y="860" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f26_di" bpmnElement="f26"><di:waypoint x="2585" y="900" /><di:waypoint x="2615" y="900" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f27_di" bpmnElement="f27"><di:waypoint x="2725" y="900" /><di:waypoint x="2785" y="900" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f28_di" bpmnElement="f28"><di:waypoint x="2835" y="900" /><di:waypoint x="2932" y="900" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f29_di" bpmnElement="f29"><di:waypoint x="2968" y="900" /><di:waypoint x="3072" y="900" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f30_di" bpmnElement="f30"><di:waypoint x="2810" y="925" /><di:waypoint x="2810" y="965" /><di:waypoint x="2932" y="965" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f31_di" bpmnElement="f31"><di:waypoint x="2968" y="965" /><di:waypoint x="3002" y="965" /><di:waypoint x="3002" y="335" /><di:waypoint x="3035" y="335" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f32_di" bpmnElement="f32"><di:waypoint x="3145" y="335" /><di:waypoint x="3212" y="335" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f33_di" bpmnElement="f33"><di:waypoint x="3005" y="190" /><di:waypoint x="3135" y="190" /><di:waypoint x="3135" y="900" /><di:waypoint x="3175" y="900" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f34_di" bpmnElement="f34"><di:waypoint x="3285" y="900" /><di:waypoint x="3300" y="900" /><di:waypoint x="3300" y="335" /><di:waypoint x="3315" y="335" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f35_di" bpmnElement="f35"><di:waypoint x="3425" y="335" /><di:waypoint x="3492" y="335" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f36_di" bpmnElement="f36"><di:waypoint x="3528" y="335" /><di:waypoint x="3625" y="335" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f37_di" bpmnElement="f37"><di:waypoint x="3675" y="335" /><di:waypoint x="3772" y="335" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f38_di" bpmnElement="f38"><di:waypoint x="3650" y="360" /><di:waypoint x="3650" y="380" /><di:waypoint x="3772" y="380" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="m1_di" bpmnElement="m1"><di:waypoint x="990" y="515" /><di:waypoint x="990" y="1070" /><bpmndi:BPMNLabel><dc:Bounds x="996" y="1010" width="104" height="44" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="m2_di" bpmnElement="m2"><di:waypoint x="1130" y="1070" /><di:waypoint x="1130" y="633" /><bpmndi:BPMNLabel><dc:Bounds x="1136" y="1010" width="104" height="44" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="m3_di" bpmnElement="m3"><di:waypoint x="2390" y="795" /><di:waypoint x="2390" y="1070" /><bpmndi:BPMNLabel><dc:Bounds x="2396" y="1010" width="104" height="44" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="m4_di" bpmnElement="m4"><di:waypoint x="2670" y="940" /><di:waypoint x="2670" y="1070" /><bpmndi:BPMNLabel><dc:Bounds x="2676" y="1010" width="104" height="44" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="m5_di" bpmnElement="m5"><di:waypoint x="2950" y="1070" /><di:waypoint x="2950" y="983" /><bpmndi:BPMNLabel><dc:Bounds x="2956" y="1010" width="104" height="44" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="m6_di" bpmnElement="m6"><di:waypoint x="3370" y="375" /><di:waypoint x="3370" y="1070" /><bpmndi:BPMNLabel><dc:Bounds x="3376" y="1010" width="104" height="44" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="m7_di" bpmnElement="m7"><di:waypoint x="3510" y="1070" /><di:waypoint x="3510" y="353" /><bpmndi:BPMNLabel><dc:Bounds x="3516" y="1010" width="104" height="44" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions></script>
+<script type="text/plain" id="bpmn-xml-overview"><?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" id="Defs_overview" targetNamespace="http://example.org/hiring-overview">
+  <bpmn:collaboration id="OCollab">
+    <bpmn:documentation>Level-1 overview of the semi-agentic hiring process. Each coloured step bundles one or more decision points (D1-D12) from the detailed model.</bpmn:documentation>
+    <bpmn:participant id="OP_org" name="Recruitment operation" processRef="OProc" />
+    <bpmn:participant id="OP_cand" name="Candidate" />
+    <bpmn:messageFlow id="om1" name="Outreach" sourceRef="o_source" targetRef="OP_cand" />
+    <bpmn:messageFlow id="om2" name="Application" sourceRef="OP_cand" targetRef="o_screen" />
+    <bpmn:messageFlow id="om3" name="Interview invitation" sourceRef="o_schedule" targetRef="OP_cand" />
+    <bpmn:messageFlow id="om4" name="Rejection with reasons" sourceRef="o_reject" targetRef="OP_cand" />
+    <bpmn:messageFlow id="om5" name="Offer" sourceRef="o_offer" targetRef="OP_cand" />
+    <bpmn:textAnnotation id="o_ann"><bpmn:text>Candidate may ask for an explanation or a human review (D12).</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="o_as" sourceRef="o_rejected" targetRef="o_ann" />
+    <bpmn:textAnnotation id="o_ann2"><bpmn:text>Every decision is written to a decision log: rule applied, evidence, who decided, when.</bpmn:text></bpmn:textAnnotation>
+  </bpmn:collaboration>
+  <bpmn:process id="OProc" name="Hiring overview" isExecutable="false">
+    <bpmn:laneSet id="OLS">
+      <bpmn:lane id="OL_people" name="People">
+        <bpmn:flowNodeRef>o_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>o_define</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>o_signoff</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>og_invite</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>o_interview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>og_hire</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>o_offer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>o_hired</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="OL_agents" name="Agents">
+        <bpmn:flowNodeRef>o_source</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>o_screen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>o_schedule</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>o_reject</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>o_rejected</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="o_start" name="Hiring need">
+      <bpmn:outgoing>of1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="o_define" name="D1 · Define vacancy and selection criteria">
+      <bpmn:documentation>Contains decision points D1 of the detailed model.</bpmn:documentation>
+      <bpmn:incoming>of1</bpmn:incoming>
+      <bpmn:outgoing>of2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="o_source" name="D2 · Find and approach candidates">
+      <bpmn:documentation>Contains decision points D2 of the detailed model.</bpmn:documentation>
+      <bpmn:incoming>of2</bpmn:incoming>
+      <bpmn:outgoing>of3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="o_screen" name="D3–D5 · Screen applications">
+      <bpmn:documentation>Contains decision points D3, D4, D5 of the detailed model.</bpmn:documentation>
+      <bpmn:incoming>of3</bpmn:incoming>
+      <bpmn:outgoing>of4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="o_signoff" name="D6–D7 · Approve shortlist and rejections">
+      <bpmn:documentation>Contains decision points D6, D7 of the detailed model.</bpmn:documentation>
+      <bpmn:incoming>of4</bpmn:incoming>
+      <bpmn:outgoing>of5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="og_invite" name="Invite to interview?">
+      <bpmn:incoming>of5</bpmn:incoming>
+      <bpmn:outgoing>of6</bpmn:outgoing>
+      <bpmn:outgoing>of7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="o_schedule" name="D8 · Schedule interview">
+      <bpmn:documentation>Contains decision points D8 of the detailed model.</bpmn:documentation>
+      <bpmn:incoming>of6</bpmn:incoming>
+      <bpmn:outgoing>of8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="o_interview" name="D9 · Interview and decide">
+      <bpmn:documentation>Contains decision points D9 of the detailed model.</bpmn:documentation>
+      <bpmn:incoming>of8</bpmn:incoming>
+      <bpmn:outgoing>of9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="og_hire" name="Hire?">
+      <bpmn:incoming>of9</bpmn:incoming>
+      <bpmn:outgoing>of10</bpmn:outgoing>
+      <bpmn:outgoing>of11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="o_offer" name="D10 · Make offer">
+      <bpmn:documentation>Contains decision points D10 of the detailed model.</bpmn:documentation>
+      <bpmn:incoming>of10</bpmn:incoming>
+      <bpmn:outgoing>of12</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="o_hired" name="Position filled">
+      <bpmn:incoming>of12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="o_reject" name="D11 · Send explained rejection">
+      <bpmn:documentation>Contains decision points D11, D12 of the detailed model.</bpmn:documentation>
+      <bpmn:incoming>of7</bpmn:incoming>
+      <bpmn:incoming>of11</bpmn:incoming>
+      <bpmn:outgoing>of13</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="o_rejected" name="Candidate rejected">
+      <bpmn:incoming>of13</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="of1" sourceRef="o_start" targetRef="o_define" />
+    <bpmn:sequenceFlow id="of2" sourceRef="o_define" targetRef="o_source" />
+    <bpmn:sequenceFlow id="of3" sourceRef="o_source" targetRef="o_screen" />
+    <bpmn:sequenceFlow id="of4" sourceRef="o_screen" targetRef="o_signoff" />
+    <bpmn:sequenceFlow id="of5" sourceRef="o_signoff" targetRef="og_invite" />
+    <bpmn:sequenceFlow id="of6" name="Yes" sourceRef="og_invite" targetRef="o_schedule" />
+    <bpmn:sequenceFlow id="of7" name="No" sourceRef="og_invite" targetRef="o_reject" />
+    <bpmn:sequenceFlow id="of8" sourceRef="o_schedule" targetRef="o_interview" />
+    <bpmn:sequenceFlow id="of9" sourceRef="o_interview" targetRef="og_hire" />
+    <bpmn:sequenceFlow id="of10" name="Yes" sourceRef="og_hire" targetRef="o_offer" />
+    <bpmn:sequenceFlow id="of11" name="No" sourceRef="og_hire" targetRef="o_reject" />
+    <bpmn:sequenceFlow id="of12" sourceRef="o_offer" targetRef="o_hired" />
+    <bpmn:sequenceFlow id="of13" sourceRef="o_reject" targetRef="o_rejected" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="ODiagram"><bpmndi:BPMNPlane id="OPlane" bpmnElement="OCollab">
+    <bpmndi:BPMNShape id="OP_org_di" bpmnElement="OP_org" isHorizontal="true"><dc:Bounds x="0" y="20" width="2130" height="330" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="OL_people_di" bpmnElement="OL_people" isHorizontal="true"><dc:Bounds x="30" y="20" width="2100" height="160" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="OL_agents_di" bpmnElement="OL_agents" isHorizontal="true"><dc:Bounds x="30" y="180" width="2100" height="170" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="OP_cand_di" bpmnElement="OP_cand" isHorizontal="true"><dc:Bounds x="0" y="410" width="2130" height="60" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_start_di" bpmnElement="o_start"><dc:Bounds x="122" y="82" width="36" height="36" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_define_di" bpmnElement="o_define" bioc:stroke="#1d4ed8" bioc:fill="#dbe7fd" color:background-color="#dbe7fd" color:border-color="#1d4ed8"><dc:Bounds x="230" y="60" width="120" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_source_di" bpmnElement="o_source" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="380" y="225" width="120" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_screen_di" bpmnElement="o_screen" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="530" y="225" width="120" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_signoff_di" bpmnElement="o_signoff" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="680" y="60" width="120" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="og_invite_di" bpmnElement="og_invite" isMarkerVisible="true"><dc:Bounds x="865" y="75" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="840" y="40" width="100" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_schedule_di" bpmnElement="o_schedule" bioc:stroke="#0f766e" bioc:fill="#d5f2ec" color:background-color="#d5f2ec" color:border-color="#0f766e"><dc:Bounds x="980" y="225" width="120" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_interview_di" bpmnElement="o_interview" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="1130" y="60" width="120" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="og_hire_di" bpmnElement="og_hire" isMarkerVisible="true"><dc:Bounds x="1315" y="75" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="1290" y="40" width="100" height="28" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_offer_di" bpmnElement="o_offer" bioc:stroke="#b42318" bioc:fill="#fde2df" color:background-color="#fde2df" color:border-color="#b42318"><dc:Bounds x="1430" y="60" width="120" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_hired_di" bpmnElement="o_hired"><dc:Bounds x="1622" y="82" width="36" height="36" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_reject_di" bpmnElement="o_reject" bioc:stroke="#0f766e" bioc:fill="#d5f2ec" color:background-color="#d5f2ec" color:border-color="#0f766e"><dc:Bounds x="1580" y="225" width="120" height="80" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_rejected_di" bpmnElement="o_rejected"><dc:Bounds x="1772" y="247" width="36" height="36" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="o_ann_di" bpmnElement="o_ann"><dc:Bounds x="1840" y="195" width="210" height="52" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="o_as_di" bpmnElement="o_as"><di:waypoint x="1804" y="251" /><di:waypoint x="1840" y="221" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNShape id="o_ann2_di" bpmnElement="o_ann2"><dc:Bounds x="1800" y="40" width="230" height="52" /></bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="of1_di" bpmnElement="of1"><di:waypoint x="158" y="100" /><di:waypoint x="230" y="100" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of2_di" bpmnElement="of2"><di:waypoint x="350" y="100" /><di:waypoint x="365" y="100" /><di:waypoint x="365" y="265" /><di:waypoint x="380" y="265" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of3_di" bpmnElement="of3"><di:waypoint x="500" y="265" /><di:waypoint x="530" y="265" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of4_di" bpmnElement="of4"><di:waypoint x="650" y="265" /><di:waypoint x="665" y="265" /><di:waypoint x="665" y="100" /><di:waypoint x="680" y="100" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of5_di" bpmnElement="of5"><di:waypoint x="800" y="100" /><di:waypoint x="865" y="100" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of6_di" bpmnElement="of6"><di:waypoint x="915" y="100" /><di:waypoint x="948" y="100" /><di:waypoint x="948" y="265" /><di:waypoint x="980" y="265" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of7_di" bpmnElement="of7"><di:waypoint x="890" y="125" /><di:waypoint x="890" y="336" /><di:waypoint x="1550" y="336" /><di:waypoint x="1550" y="265" /><di:waypoint x="1580" y="265" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of8_di" bpmnElement="of8"><di:waypoint x="1100" y="265" /><di:waypoint x="1115" y="265" /><di:waypoint x="1115" y="100" /><di:waypoint x="1130" y="100" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of9_di" bpmnElement="of9"><di:waypoint x="1250" y="100" /><di:waypoint x="1315" y="100" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of10_di" bpmnElement="of10"><di:waypoint x="1365" y="100" /><di:waypoint x="1430" y="100" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of11_di" bpmnElement="of11"><di:waypoint x="1340" y="125" /><di:waypoint x="1340" y="265" /><di:waypoint x="1580" y="265" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of12_di" bpmnElement="of12"><di:waypoint x="1550" y="100" /><di:waypoint x="1622" y="100" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="of13_di" bpmnElement="of13"><di:waypoint x="1700" y="265" /><di:waypoint x="1772" y="265" /></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="om1_di" bpmnElement="om1"><di:waypoint x="415" y="305" /><di:waypoint x="415" y="410" /><bpmndi:BPMNLabel><dc:Bounds x="421" y="358" width="90" height="40" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="om2_di" bpmnElement="om2"><di:waypoint x="615" y="410" /><di:waypoint x="615" y="305" /><bpmndi:BPMNLabel><dc:Bounds x="621" y="358" width="90" height="40" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="om3_di" bpmnElement="om3"><di:waypoint x="1015" y="305" /><di:waypoint x="1015" y="410" /><bpmndi:BPMNLabel><dc:Bounds x="1021" y="358" width="90" height="40" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="om4_di" bpmnElement="om4"><di:waypoint x="1615" y="305" /><di:waypoint x="1615" y="410" /><bpmndi:BPMNLabel><dc:Bounds x="1621" y="358" width="90" height="40" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="om5_di" bpmnElement="om5"><di:waypoint x="1465" y="140" /><di:waypoint x="1465" y="410" /><bpmndi:BPMNLabel><dc:Bounds x="1471" y="358" width="90" height="40" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+  </bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</bpmn:definitions></script>
+<script src="https://unpkg.com/bpmn-js@18.30.1/dist/bpmn-navigated-viewer.production.min.js"></script>
+<script>
+const DECISIONS = [{"id": "D1", "el": "t_criteria", "cat": "rule", "title": "Translate requirements into selection criteria", "owner": "Recruiter, approved by hiring manager", "effect": "Sets the rules every later agent applies. One biased criterion is applied to every applicant.", "law": "Equal treatment law (AWGB, WGBL): criteria must be job-related and proportionate, including indirect effects. AI Act Art. 9 (risk management). GDPR Art. 5(1)(c) (data minimisation).", "question": "Can an agent draft criteria from the job description, and who must approve them before they become machine-readable rules?", "hyp": "Agent proposes, human decides"}, {"id": "D2", "el": "t_search", "cat": "outcome", "title": "Search talent pools and select prospects", "owner": "Sourcing agent", "effect": "Decides who hears about the job at all. People who are never approached never apply, so they are never rejected and have nothing to contest.", "law": "AI Act Annex III(4)(a) names targeted job advertisements explicitly. Equal treatment law (who gets targeted). GDPR Art. 14 (informing people whose data was collected indirectly).", "question": "May the agent choose whom to approach on its own? How do you measure adverse impact on people who were never contacted?", "hyp": "Agent decides within approved rules, with sampled audits"}, {"id": "D3", "el": "t_knock", "cat": "outcome", "title": "Check knock-out criteria", "owner": "Screening agent", "effect": "A fail ends the application.", "law": "GDPR Art. 22 (a rejection based solely on automated processing). AI Act Art. 12 (logging) and Art. 14 (human oversight). Equal treatment law: language, degree and experience requirements can discriminate indirectly.", "question": "May a failed hard requirement, such as no work permit, lead to automatic rejection, or does every rejection need D7?", "hyp": "Agent decides only for objective, verifiable criteria (disputed)"}, {"id": "D4", "el": "t_score", "cat": "outcome", "title": "Score against weighted criteria", "owner": "Screening agent", "effect": "Sets the ranking, and so decides who reaches the shortlist.", "law": "AI Act Arts. 13–15 (transparency, oversight, accuracy). Adverse-impact testing under equal treatment law. GDPR Art. 22.", "question": "Which scores are safe to act on without a human check? How is each score explained in terms of criteria and evidence?", "hyp": "Agent proposes, human decides"}, {"id": "D5", "el": "g_band", "cat": "oversight", "title": "Clear case or escalate?", "owner": "Screening agent, applying a rule set by a human", "effect": "Decides which candidates a human ever sees.", "law": "AI Act Art. 14(4): overseers must be able to understand the output, spot anomalies and resist automation bias. Art. 26(2): the deployer assigns competent people to oversight.", "question": "Which triggers force escalation (confidence, score band, missing data, proxies for protected traits), and who sets them?", "hyp": "Human sets the rule, agent applies it"}, {"id": "D6", "el": "t_review", "cat": "oversight", "title": "Review escalated case", "owner": "Recruiter", "effect": "Final say on hard cases.", "law": "Meaningful human involvement: EDPB (WP29) guidelines on automated decision-making, and CJEU C-634/21 (SCHUFA).", "question": "What must the recruiter see to judge independently rather than simply confirm the agent's view?", "hyp": "Human only"}, {"id": "D7", "el": "t_signoff", "cat": "outcome", "title": "Sign off shortlist and rejections", "owner": "Recruiter", "effect": "The formal decision someone is accountable for.", "law": "GDPR Art. 22: rubber-stamping in bulk can still count as solely automated. AI Act Art. 26 (deployer obligations) and Art. 86 (right to explanation).", "question": "Is batch sign-off of agent proposals meaningful oversight? What minimum review, or sample, makes it real?", "hyp": "Human decides, agent prepares"}, {"id": "D8", "el": "t_schedule", "cat": "execution", "title": "Propose slots and book interview", "owner": "Scheduling agent", "effect": "Little direct impact, but rigid time slots can disadvantage candidates with care duties or a disability.", "law": "Disability equal treatment law (WGBH/CZ): reasonable accommodation. GDPR data minimisation.", "question": "Can the agent decide fully on its own, as long as accommodation requests go to a human?", "hyp": "Agent decides"}, {"id": "D9", "el": "t_assess", "cat": "outcome", "title": "Assess candidate and decide on hire", "owner": "Hiring manager", "effect": "The selection decision.", "law": "Equal treatment law, and documentation to justify the choice. NVP Sollicitatiecode (voluntary Dutch recruitment code).", "question": "May an agent summarise interview notes or make a recommendation? If so, how is that recommendation logged?", "hyp": "Human only; agent may summarise"}, {"id": "D10", "el": "t_terms", "cat": "outcome", "title": "Set offer terms", "owner": "Hiring manager", "effect": "Pay and conditions.", "law": "EU Pay Transparency Directive 2023/970: pay range shared with applicants, no questions about pay history. Equal pay.", "question": "Can an agent propose a salary within the band without reproducing historical pay gaps?", "hyp": "Agent proposes within band, human decides"}, {"id": "D11", "el": "t_reject", "cat": "execution", "title": "Draft rejection with reasons", "owner": "Communication agent", "effect": "What the candidate learns about why they were rejected.", "law": "GDPR Arts. 13–15 and 22(3). AI Act Art. 86 (explanation of individual decisions) and Art. 50(1) (disclosure when people interact with an AI system). NVP Sollicitatiecode.", "question": "May the agent send rejections without review if the reasons come from the decision log? How do you check that the stated reasons match the real ones?", "hyp": "Agent decides, if the text is generated from logged reasons"}, {"id": "D12", "el": "t_humanreview", "cat": "oversight", "title": "Human review of contested decision", "owner": "Recruiter", "effect": "A second look that can reverse the outcome.", "law": "GDPR Art. 22(3): the right to human intervention, to give one's own view and to contest the decision. AI Act Art. 86.", "question": "Who reviews (someone other than the recruiter who signed off?), within what time limit, and what counts as a reversal?", "hyp": "Human only"}];
+const OV_MAP = {"D1": "o_define", "D2": "o_source", "D3": "o_screen", "D4": "o_screen", "D5": "o_screen", "D6": "o_signoff", "D7": "o_signoff", "D8": "o_schedule", "D9": "o_interview", "D10": "o_offer", "D11": "o_reject", "D12": "o_reject"};
+const SLICES = [
+  { id: "A", name: "Screening to sign-off", ds: "D3–D7", tag: "Core",
+    body: "Application in, shortlist or proposed rejection out. The heart of the GDPR Art. 22 question.",
+    pro: "Runs on synthetic CVs with matched pairs; adverse impact and escalation rate are directly measurable; strongest Paprika fit.",
+    con: "On its own it stops before the candidate is told anything.",
+    els: ["ev_app","t_parse","t_knock","g_knock","t_score","g_band","t_review","t_signoff","g_invite","f9","f10","f11","f12","f13","f14","f15","f16","f17","f18"] },
+  { id: "B", name: "Rejection and contest", ds: "D7, D11, D12", tag: "Traceability",
+    body: "From the sign-off to the rejection letter and a possible request for human review.",
+    pro: "Tests your success criterion head-on: can the reason in the letter be rebuilt from the log?",
+    con: "Thin on its own; it needs decisions upstream to explain.",
+    els: ["t_signoff","g_invite","t_reject","t_sendrej","g_evrej","ev_timer","end_rejected","ev_contest","t_humanreview","end_review","f18","f20","f26","f27","f28","f29","f30","f31","f32","m4","m5"] },
+  { id: "C", name: "Criteria and sourcing", ds: "D1–D2", tag: "Hidden decisions",
+    body: "Turning requirements into rules and choosing whom to approach.",
+    pro: "An original angle: the AI Act names targeted job ads, yet nobody gets rejected, so nobody can contest.",
+    con: "Hard to measure, because the excluded group is invisible; harder to simulate.",
+    els: ["t_define","t_criteria","g_approve","t_publish","t_search","t_approach","f2","f3","f4","f5","f6","f7","f8","m1"] },
+  { id: "D", name: "Interview to offer", ds: "D8–D10", tag: "Mostly human",
+    body: "Scheduling, the hire decision and offer terms.",
+    pro: "The pay transparency angle is fresh.",
+    con: "Little agent autonomy today, so the delegation question is weaker.",
+    els: ["t_schedule","t_interview","t_assess","g_offer","t_terms","t_draftoffer","t_sendoffer","ev_response","g_accepted","end_hired","end_declined","f19","f21","f22","f23","f24","f33","f34","f35","f36","f37","f38","m3","m6","m7"] },
+  { id: "AB", name: "Recommended: A + B", ds: "D3–D7, D11–D12", tag: "Suggested scope",
+    body: "From application to an explained, contestable rejection. Treat D1 as a fixed input (a given criteria set) rather than in scope.",
+    pro: "Covers the full research question: delegation, accountability and traceability, in one runnable flow.",
+    con: "Scope is larger, so keep the synthetic data set small.",
+    els: [] }
+];
+SLICES[4].els = [...new Set([...SLICES[0].els, ...SLICES[1].els])];
+const SLICE_DECISIONS = { A: ["D3","D4","D5","D6","D7"], B: ["D7","D11","D12"], C: ["D1","D2"], D: ["D8","D9","D10"], AB: ["D3","D4","D5","D6","D7","D11","D12"] };
+
+const byEl = Object.fromEntries(DECISIONS.map(d => [d.el, d]));
+const byOvEl = {};
+DECISIONS.forEach(d => { const e = OV_MAP[d.id]; if (e) (byOvEl[e] = byOvEl[e] || []).push(d); });
+let view = "overview";
+const elFor = d => view === "overview" ? OV_MAP[d.id] : d.el;
+const catName = { rule: "Rule-setting", outcome: "Candidate outcome", oversight: "Oversight & escalation", execution: "Execution & communication" };
+const reg = document.getElementById("register");
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+DECISIONS.forEach(d => {
+  const r = document.createElement("div");
+  r.className = "row"; r.id = "row-" + d.id; r.tabIndex = 0; r.dataset.cat = d.cat; r.dataset.id = d.id;
+  r.setAttribute("aria-label", d.id + " " + d.title);
+  r.innerHTML = `
+    <span class="did ${d.cat}" title="${catName[d.cat]}">${d.id}</span>
+    <div class="cell"><span class="t">${esc(d.title)}</span><span class="s">${esc(d.owner)}</span></div>
+    <div class="cell"><span class="lbl">Effect on the candidate</span>${esc(d.effect)}</div>
+    <div class="cell"><span class="lbl">Legal hooks</span><span class="s">${esc(d.law)}</span></div>
+    <div class="cell"><span class="lbl">Delegation question</span>${esc(d.question)}<span class="hyp">${esc(d.hyp)}</span></div>`;
+  r.addEventListener("click", () => focusDecision(d, true));
+  r.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); focusDecision(d, true); } });
+  reg.appendChild(r);
+});
+
+const sl = document.getElementById("slices");
+SLICES.forEach(s => {
+  const b = document.createElement("button");
+  b.className = "slice" + (s.id === "AB" ? " rec" : ""); b.dataset.slice = s.id; b.setAttribute("aria-pressed", "false");
+  b.innerHTML = `<div class="top"><span class="name">${esc(s.name)}</span><span class="ds">${esc(s.ds)}</span></div>
+    <span class="tag">${esc(s.tag)}</span>
+    <span class="body">${esc(s.body)}</span>
+    <span class="pc"><span><b>For:</b> ${esc(s.pro)}</span><span><b>Against:</b> ${esc(s.con)}</span></span>`;
+  b.addEventListener("click", () => applySlice(s.id));
+  sl.appendChild(b);
+});
+
+let viewer = null, canvas = null, hl = null, activeSlice = null, sliceMarked = [];
+const activeCats = new Set(["rule", "outcome", "oversight", "execution"]);
+
+function applyRowFilter() {
+  const sd = activeSlice ? SLICE_DECISIONS[activeSlice] : null;
+  DECISIONS.forEach(d => {
+    document.getElementById("row-" + d.id).hidden = !activeCats.has(d.cat) || (sd && !sd.includes(d.id));
+  });
+}
+async function applySlice(id) {
+  if (activeSlice === id) id = null;
+  if (id && view !== "detail") await setView("detail");
+  activeSlice = id;
+  document.querySelectorAll(".slice").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.slice === id)));
+  if (canvas) {
+    sliceMarked.forEach(e => canvas.removeMarker(e, "inslice"));
+    sliceMarked = [];
+    const c = document.getElementById("canvas");
+    if (id) {
+      const s = SLICES.find(x => x.id === id);
+      const reg = viewer.get("elementRegistry");
+      s.els.forEach(e => [e, e + "_label"].forEach(x => { if (reg.get(x)) { canvas.addMarker(x, "inslice"); sliceMarked.push(x); } }));
+      c.classList.add("slicing");
+      zoomTo(s.els);
+    } else { c.classList.remove("slicing"); fitHeight(); }
+  }
+  applyRowFilter();
+}
+function zoomTo(ids) {
+  const reg = viewer.get("elementRegistry");
+  const els = ids.map(i => reg.get(i)).filter(e => e && e.x !== undefined);
+  if (!els.length) return;
+  const x1 = Math.min(...els.map(e => e.x)) - 60, y1 = Math.min(...els.map(e => e.y)) - 60;
+  const x2 = Math.max(...els.map(e => e.x + e.width)) + 60, y2 = Math.max(...els.map(e => e.y + e.height)) + 60;
+  canvas.viewbox({ x: x1, y: y1, width: x2 - x1, height: y2 - y1 });
+}
+function focusDecision(d, fromRegister) {
+  document.querySelectorAll(".row.sel").forEach(r => r.classList.remove("sel"));
+  const row = document.getElementById("row-" + d.id);
+  row.classList.add("sel");
+  if (canvas) {
+    if (hl) canvas.removeMarker(hl, "hl");
+    const target = elFor(d);
+    canvas.addMarker(target, "hl"); hl = target;
+    if (fromRegister) {
+      const e = viewer.get("elementRegistry").get(target);
+      const vb = canvas.viewbox();
+      const w = Math.max(vb.width, view === "overview" ? 1200 : 900), h = w * (vb.outer.height / vb.outer.width);
+      canvas.viewbox({ x: e.x + e.width / 2 - w / 2, y: e.y + e.height / 2 - h / 2, width: w, height: h });
+      document.getElementById("canvas").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    }
+  }
+  if (!fromRegister && view === "overview") {
+    (byOvEl[elFor(d)] || []).forEach(x => document.getElementById("row-" + x.id).classList.add("sel"));
+  }
+  if (!fromRegister) {
+    if (row.hidden) { activeCats.add(d.cat); syncChips(); applySlice(null); }
+    row.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+function syncChips() {
+  document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", String(activeCats.has(c.dataset.cat))));
+}
+document.querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => {
+  const k = c.dataset.cat;
+  if (activeCats.has(k) && activeCats.size > 1) activeCats.delete(k); else activeCats.add(k);
+  syncChips(); applyRowFilter();
+}));
+
+const XMLS = { detail: document.getElementById("bpmn-xml").textContent, overview: document.getElementById("bpmn-xml-overview").textContent };
+const NOTES = {
+  overview: "The general hiring process in eight steps. People (hiring manager and recruiter) in the top lane, the four agents below, the candidate at the bottom. Each coloured step contains one or more decision points from the detailed model.",
+  detail: "The same process split into one lane per agent, with every decision point drawn separately. Use this level for the slice you analyse."
+};
+const HINTS = {
+  overview: "Scroll to zoom, drag to pan. Click a coloured step to see its decisions in the register.",
+  detail: "The map opens at the start of the process. Drag sideways to follow it, scroll to zoom, or press Whole process for the full view. Click a coloured task or gateway to find it in the register."
+};
+document.getElementById("copy").addEventListener("click", async (ev) => {
+  const b = ev.currentTarget;
+  try { await navigator.clipboard.writeText(XMLS[view]); b.textContent = "Copied"; }
+  catch (_) { b.textContent = "Copy failed"; }
+  setTimeout(() => b.textContent = "Copy BPMN XML", 1800);
+});
+
+function fitHeight() {
+  const inner = canvas.viewbox().inner, outer = canvas.viewbox().outer;
+  const h = inner.height + 40, w = h * outer.width / outer.height;
+  if (w >= inner.width + 40) { canvas.zoom("fit-viewport"); return; }
+  canvas.viewbox({ x: inner.x - 20, y: inner.y - 20, width: w, height: h });
+}
+async function setView(v) {
+  view = v;
+  document.getElementById("tab-overview").setAttribute("aria-selected", String(v === "overview"));
+  document.getElementById("tab-detail").setAttribute("aria-selected", String(v === "detail"));
+  document.getElementById("viewnote").textContent = NOTES[v];
+  document.getElementById("hint").textContent = HINTS[v];
+  if (!viewer) return;
+  hl = null; sliceMarked = [];
+  if (v === "overview") { activeSlice = null; document.querySelectorAll(".slice").forEach(b => b.setAttribute("aria-pressed", "false")); applyRowFilter(); }
+  document.getElementById("canvas").classList.remove("slicing");
+  const host = document.getElementById("canvas");
+  host.style.height = v === "overview" ? Math.max(300, Math.round(host.clientWidth * 0.3)) + "px" : "";
+  try { await viewer.importXML(XMLS[v]); } catch (e) { return; }
+  canvas = viewer.get("canvas");
+  canvas.resized();
+  viewer.get("elementRegistry").forEach(e => {
+    if (e.type === "bpmn:Participant" || e.type === "bpmn:Lane" || e.type === "bpmn:TextAnnotation" || e.type === "bpmn:DataStoreReference") canvas.addMarker(e.id, "keep");
+    if ((v === "detail" && byEl[e.id]) || (v === "overview" && byOvEl[e.id])) canvas.addMarker(e.id, "decision");
+  });
+  if (v === "overview") canvas.zoom("fit-viewport"); else fitHeight();
+}
+async function init() {
+  const host = document.getElementById("canvas");
+  setView("overview");
+  if (typeof BpmnJS === "undefined") { host.innerHTML = '<div class="loadmsg">The diagram viewer could not load. The register below still lists every decision.</div>'; return; }
+  host.innerHTML = "";
+  viewer = new BpmnJS({ container: host });
+  try { await viewer.importXML(XMLS.overview); } catch (e) { host.innerHTML = '<div class="loadmsg">Could not draw the diagram: ' + esc(String(e.message || e)) + '</div>'; return; }
+  await setView("overview");
+  document.getElementById("tab-overview").onclick = () => setView("overview");
+  document.getElementById("tab-detail").onclick = () => setView("detail");
+  document.getElementById("zin").onclick = () => canvas.zoom(canvas.zoom() * 1.25);
+  document.getElementById("zout").onclick = () => canvas.zoom(canvas.zoom() / 1.25);
+  document.getElementById("fit").onclick = () => canvas.zoom("fit-viewport");
+  document.getElementById("clear").onclick = () => { if (activeSlice) applySlice(activeSlice); if (hl) { canvas.removeMarker(hl, "hl"); hl = null; } document.querySelectorAll(".row.sel").forEach(r => r.classList.remove("sel")); };
+  viewer.on("element.click", ev => {
+    const d = view === "detail" ? byEl[ev.element.id] : (byOvEl[ev.element.id] || [])[0];
+    if (d) focusDecision(d, false);
+  });
+  window.addEventListener("resize", () => { if (activeSlice) return; if (view === "overview") canvas.zoom("fit-viewport"); else fitHeight(); });
+}
+init();
+</script>
+
+</body></html>
