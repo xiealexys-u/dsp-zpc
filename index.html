@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Hiring Decision Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1499,6 +1499,7 @@
   --oversight: #6d3fc0; --oversight-bg: #ece4fb;
   --execution: #0f766e; --execution-bg: #d5f2ec;
   --sel-bg: #fff4dc;
+  --pol: #23407a;
   --font-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -1508,7 +1509,7 @@
     --accent: #9db8f0; --focus: #f2b440; --paper: #ffffff;
     --rule: #8fb1ff; --rule-bg: #1d2b4d; --outcome: #ff9c90; --outcome-bg: #43201d;
     --oversight: #c3a6ff; --oversight-bg: #2e2447; --execution: #6fd6c4; --execution-bg: #173a36;
-    --sel-bg: #3a2f14;
+    --sel-bg: #3a2f14; --pol: #9db8f0;
     color-scheme: dark;
   }
 }
@@ -1517,7 +1518,7 @@
   --accent: #9db8f0; --focus: #f2b440; --paper: #ffffff;
   --rule: #8fb1ff; --rule-bg: #1d2b4d; --outcome: #ff9c90; --outcome-bg: #43201d;
   --oversight: #c3a6ff; --oversight-bg: #2e2447; --execution: #6fd6c4; --execution-bg: #173a36;
-  --sel-bg: #3a2f14;
+  --sel-bg: #3a2f14; --pol: #9db8f0;
   color-scheme: dark;
 }
 *, *::before, *::after { box-sizing: border-box; }
@@ -1613,6 +1614,55 @@ p { margin: 0; }
 .refs li { padding-left: 2em; text-indent: -2em; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
 .refs a { color: var(--accent); }
 .refs .used { display: block; text-indent: 0; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.polrow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.polrow .lab { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+.pchip { font: 600 12.5px var(--font-mono); border: 1px solid var(--pol); color: var(--pol); background: var(--surface); border-radius: 6px; padding: 3px 8px; cursor: pointer; }
+.pchip[aria-pressed="true"] { background: var(--pol); color: var(--surface); }
+.pchip.on { background: var(--pol); color: var(--surface); }
+.btn[aria-pressed="false"] { opacity: .6; }
+.pol-ov { display: flex; flex-wrap: wrap; gap: 2px; pointer-events: none; }
+.pol-ov span { font: 700 10px/1 "JetBrains Mono", ui-monospace, monospace; background: #23407a; color: #fff; border-radius: 3px; padding: 2px 3px; }
+.pol-ov.up { transform: translateY(-100%); padding-bottom: 3px; }
+#canvas.nopol .pol-ov { display: none; }
+.polgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.pcard { text-align: left; font: inherit; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 8px; align-content: start; cursor: pointer; min-width: 0; }
+.pcard:hover { border-color: var(--pol); }
+.pcard[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--focus) inset; border-color: var(--focus); }
+.pcard .top { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; }
+.pcard .pid { font: 700 13px var(--font-mono); color: var(--pol); }
+.pcard .nm { font-weight: 600; font-size: 15.5px; flex: 1; }
+.pcard .src { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; background: var(--sel-bg); white-space: nowrap; }
+.pcard .rl { font-size: 14px; color: var(--muted); }
+.pcard .lw { font-size: 12.5px; color: var(--muted); }
+.steps { display: flex; flex-wrap: wrap; gap: 4px; }
+.stp { font-size: 12px; border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; background: var(--bg); color: var(--fg); white-space: nowrap; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table.mx { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+table.mx th, table.mx td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
+table.mx th:first-child, table.mx td:first-child { text-align: left; position: sticky; left: 0; background: var(--surface); }
+table.mx thead th { font: 700 12px var(--font-mono); color: var(--pol); cursor: pointer; }
+table.mx tbody tr { cursor: pointer; }
+table.mx tbody tr:hover td { background: color-mix(in srgb, var(--sel-bg) 50%, transparent); }
+table.mx td.y { color: var(--pol); font-weight: 700; }
+table.mx td .n { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 12px; }
+.chg { display: grid; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+.chead, .crow { display: grid; grid-template-columns: 52px 150px minmax(0, 2fr) 92px minmax(0, 1.6fr); gap: 14px; padding: 11px 16px; align-items: start; }
+.chead { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); }
+.crow { border-bottom: 1px solid var(--line); font-size: 14px; cursor: pointer; }
+.crow:last-child { border-bottom: 0; }
+.crow:hover { background: color-mix(in srgb, var(--sel-bg) 45%, transparent); }
+.crow.sel { background: var(--sel-bg); }
+.crow[hidden] { display: none !important; }
+.crow:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.cid { font: 700 13px var(--font-mono); }
+.cpol { font-size: 13px; }
+.cpol b { font-family: var(--font-mono); color: var(--pol); }
+.kind { font-size: 12px; color: var(--muted); }
+.count { font-size: 14px; color: var(--muted); }
+@media (max-width: 860px) {
+  .chead { display: none; }
+  .crow { grid-template-columns: 1fr; gap: 6px; }
+}
 @media (max-width: 860px) {
   .rhead { display: none; }
   .row { grid-template-columns: 1fr; gap: 10px; }
@@ -1625,7 +1675,7 @@ p { margin: 0; }
   <header>
     <div class="eyebrow">Zero-person recruitment · BPMN 2.0 · vacancy to offer</div>
     <h1>Hiring Decision Map</h1>
-    <p class="lede">The hiring process as a team of agents and two accountable humans would run it, at two levels of detail. The overview shows the standard hiring funnel. The detailed model breaks it open into 12 numbered decision points (D1–D12), coloured by type. Pick a slice below to see which part of the detailed model it covers.</p>
+    <p class="lede">The hiring process as a team of agents and two accountable humans would run it, at two levels of detail. The overview shows the standard hiring funnel. The detailed model breaks it open into 12 numbered decision points (D1–D12), coloured by type. Pick a slice below to see which part of the detailed model it covers. The navy tags (P1–P10) show which policy from the policy layer governs each step, and the 40 example policy changes further down show which steps each change reaches.</p>
   </header>
 
   <section class="canvas-block" aria-label="Process diagram">
@@ -1646,9 +1696,11 @@ p { margin: 0; }
         <button class="btn" id="zout" aria-label="Zoom out">−</button>
         <button class="btn" id="fit">Whole process</button>
         <button class="btn" id="clear">Show all</button>
+        <button class="btn" id="poltoggle" aria-pressed="true">Policy tags</button>
         <button class="btn" id="copy">Copy BPMN XML</button>
       </div>
     </div>
+    <div class="polrow" id="polrow" role="group" aria-label="Highlight the steps a policy governs"><span class="lab">Policy layer</span></div>
     <div id="canvas"><div class="loadmsg">Loading diagram…</div></div>
     <p class="hint" id="hint"></p>
   </section>
@@ -1671,6 +1723,26 @@ p { margin: 0; }
     </div>
   </section>
 
+  <section class="section" id="policies" aria-labelledby="pol-h">
+    <div class="section-head">
+      <h2 id="pol-h">Policy layer: which policy governs which step</h2>
+      <p>P1–P3 are the three policies on the poster. P4–P9 are drafted from the legal hooks in the register, and P10 comes from the concept report's decision record. Click a policy to light up its steps on the map and filter the changes below.</p>
+    </div>
+    <div class="polgrid" id="polgrid"></div>
+    <div class="tablewrap"><table class="mx" id="matrix" aria-label="Steps by policy"></table></div>
+  </section>
+
+  <section class="section" id="changes" aria-labelledby="chg-h">
+    <div class="section-head">
+      <h2 id="chg-h">40 example policy changes</h2>
+      <p>Each change is made once, in one policy, and reaches the steps listed. Click a change to see those steps on the detailed model. These are drafted examples for testing the policy layer, not decisions.</p>
+      <p class="count" id="chgcount"></p>
+    </div>
+    <div class="chg" id="chg">
+      <div class="chead"><span>#</span><span>Policy</span><span>Change</span><span>Type</span><span>Affected steps</span></div>
+    </div>
+  </section>
+
   <section class="notes" aria-labelledby="notes-h">
     <h2 id="notes-h" style="color:var(--fg)">Modelling choices</h2>
     <ul>
@@ -1679,6 +1751,7 @@ p { margin: 0; }
       <li><b>One candidate from "Application received" onwards.</b> The vacancy-level part runs once, and the flow after it shows the path of one applicant. A fuller model would use a multi-instance subprocess.</li>
       <li><b>Every knock-out and score passes D7 in this map.</b> Whether an agent may skip that step is the delegation question itself, so the map keeps it open.</li>
       <li><b>Decision log.</b> Every D-point is assumed to write the rule applied, the evidence used, the actor, a timestamp and the model or rule version. This record is what your 2-minute reconstruction criterion tests.</li>
+      <li><b>Policy tags.</b> A step carries a policy tag when that policy sets a rule the step must follow. The tags are also written into each element's documentation, so "Copy BPMN XML" exports the mapping. P4–P10 and all 40 changes are drafts to check as a group.</li>
       <li><b>Legal hooks are pointers, not legal advice.</b> Under the Digital Omnibus (Regulation (EU) 2026/1744) the AI Act's Annex III duties apply from 2 December 2027. Full sources are in the <a href="#references" style="color:var(--accent)">References</a> below.</li>
     </ul>
   </section>
@@ -1714,7 +1787,7 @@ p { margin: 0; }
 <script type="text/plain" id="bpmn-xml"><?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" id="Defs_hiring" targetNamespace="http://example.org/hiring" exporter="hand-generated" exporterVersion="1.0">
   <bpmn:collaboration id="Collab_hiring">
-    <bpmn:documentation>Semi-agentic hiring process, vacancy to offer. Decision points are numbered D1-D12 and colour-coded: blue = rule-setting, red = candidate outcome, purple = oversight/escalation, teal = execution/communication. Every decision point is assumed to write a record (rule applied, evidence, actor, timestamp) to the decision log.</bpmn:documentation>
+    <bpmn:documentation>Semi-agentic hiring process, vacancy to offer. Decision points are numbered D1-D12 and colour-coded: blue = rule-setting, red = candidate outcome, purple = oversight/escalation, teal = execution/communication. Every decision point is assumed to write a record (rule applied, evidence, actor, timestamp) to the decision log. Each step's documentation lists the policies (P1-P10) from the policy layer that govern it.</bpmn:documentation>
     <bpmn:participant id="P_org" name="Recruitment operation (zero-person company)" processRef="Proc_hiring" />
     <bpmn:participant id="P_cand" name="Candidate" />
     <bpmn:messageFlow id="m1" name="Outreach message" sourceRef="t_approach" targetRef="P_cand" />
@@ -1782,106 +1855,117 @@ p { margin: 0; }
       <bpmn:outgoing>f1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:userTask id="t_define" name="Define role and requirements">
+      <bpmn:documentation>Policies: P1 Non-bias policy; P7 Pay transparency policy.</bpmn:documentation>
       <bpmn:incoming>f1</bpmn:incoming>
       <bpmn:outgoing>f2</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="t_criteria" name="D1 · Translate requirements into selection criteria">
-      <bpmn:documentation>D1 (rule). Default owner in this map: Recruiter, approved by hiring manager. Effect on candidate: Sets the rules every later agent applies. One biased criterion is applied to every applicant. Legal hooks: Equal treatment law (AWGB, WGBL): criteria must be job-related and proportionate, including indirect effects. AI Act Art. 9 (risk management). GDPR Art. 5(1)(c) (data minimisation). Delegation question: Can an agent draft criteria from the job description, and who must approve them before they become machine-readable rules?</bpmn:documentation>
+      <bpmn:documentation>D1 (rule). Default owner in this map: Recruiter, approved by hiring manager. Effect on candidate: Sets the rules every later agent applies. One biased criterion is applied to every applicant. Legal hooks: Equal treatment law (AWGB, WGBL): criteria must be job-related and proportionate, including indirect effects. AI Act Art. 9 (risk management). GDPR Art. 5(1)(c) (data minimisation). Delegation question: Can an agent draft criteria from the job description, and who must approve them before they become machine-readable rules? Policies: P1 Non-bias policy; P5 Candidate data policy; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f2</bpmn:incoming>
       <bpmn:incoming>f4</bpmn:incoming>
       <bpmn:outgoing>f3</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="g_approve" name="Vacancy and criteria approved?">
+      <bpmn:documentation>Policies: P1 Non-bias policy.</bpmn:documentation>
       <bpmn:incoming>f3</bpmn:incoming>
       <bpmn:outgoing>f4</bpmn:outgoing>
       <bpmn:outgoing>f5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="t_publish" name="Publish vacancy on job channels">
+      <bpmn:documentation>Policies: P7 Pay transparency policy; P9 AI disclosure policy.</bpmn:documentation>
       <bpmn:incoming>f5</bpmn:incoming>
       <bpmn:outgoing>f6</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="t_search" name="D2 · Search talent pools and select prospects">
-      <bpmn:documentation>D2 (outcome). Default owner in this map: Sourcing agent. Effect on candidate: Decides who hears about the job at all. People who are never approached never apply, so they are never rejected and have nothing to contest. Legal hooks: AI Act Annex III(4)(a) names targeted job advertisements explicitly. Equal treatment law (who gets targeted). GDPR Art. 14 (informing people whose data was collected indirectly). Delegation question: May the agent choose whom to approach on its own? How do you measure adverse impact on people who were never contacted?</bpmn:documentation>
+      <bpmn:documentation>D2 (outcome). Default owner in this map: Sourcing agent. Effect on candidate: Decides who hears about the job at all. People who are never approached never apply, so they are never rejected and have nothing to contest. Legal hooks: AI Act Annex III(4)(a) names targeted job advertisements explicitly. Equal treatment law (who gets targeted). GDPR Art. 14 (informing people whose data was collected indirectly). Delegation question: May the agent choose whom to approach on its own? How do you measure adverse impact on people who were never contacted? Policies: P1 Non-bias policy; P5 Candidate data policy; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f6</bpmn:incoming>
       <bpmn:outgoing>f7</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sendTask id="t_approach" name="Approach selected prospects">
+      <bpmn:documentation>Policies: P5 Candidate data policy; P9 AI disclosure policy.</bpmn:documentation>
       <bpmn:incoming>f7</bpmn:incoming>
       <bpmn:outgoing>f8</bpmn:outgoing>
     </bpmn:sendTask>
     <bpmn:intermediateCatchEvent id="ev_app" name="Application received">
+      <bpmn:documentation>Policies: P5 Candidate data policy; P7 Pay transparency policy; P9 AI disclosure policy.</bpmn:documentation>
       <bpmn:incoming>f8</bpmn:incoming>
       <bpmn:outgoing>f9</bpmn:outgoing>
       <bpmn:messageEventDefinition id="med_ev_app" />
     </bpmn:intermediateCatchEvent>
     <bpmn:serviceTask id="t_parse" name="Parse CV and extract evidence">
+      <bpmn:documentation>Policies: P1 Non-bias policy; P4 Escalation rule; P5 Candidate data policy.</bpmn:documentation>
       <bpmn:incoming>f9</bpmn:incoming>
       <bpmn:outgoing>f10</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:businessRuleTask id="t_knock" name="D3 · Check knock-out criteria">
-      <bpmn:documentation>D3 (outcome). Default owner in this map: Screening agent. Effect on candidate: A fail ends the application. Legal hooks: GDPR Art. 22 (a rejection based solely on automated processing). AI Act Art. 12 (logging) and Art. 14 (human oversight). Equal treatment law: language, degree and experience requirements can discriminate indirectly. Delegation question: May a failed hard requirement, such as no work permit, lead to automatic rejection, or does every rejection need D7?</bpmn:documentation>
+      <bpmn:documentation>D3 (outcome). Default owner in this map: Screening agent. Effect on candidate: A fail ends the application. Legal hooks: GDPR Art. 22 (a rejection based solely on automated processing). AI Act Art. 12 (logging) and Art. 14 (human oversight). Equal treatment law: language, degree and experience requirements can discriminate indirectly. Delegation question: May a failed hard requirement, such as no work permit, lead to automatic rejection, or does every rejection need D7? Policies: P1 Non-bias policy; P2 Sign-off rule; P5 Candidate data policy; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f10</bpmn:incoming>
       <bpmn:outgoing>f11</bpmn:outgoing>
     </bpmn:businessRuleTask>
     <bpmn:exclusiveGateway id="g_knock" name="Meets knock-out criteria?">
+      <bpmn:documentation>Policies: P2 Sign-off rule.</bpmn:documentation>
       <bpmn:incoming>f11</bpmn:incoming>
       <bpmn:outgoing>f12</bpmn:outgoing>
       <bpmn:outgoing>f13</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:businessRuleTask id="t_score" name="D4 · Score against weighted criteria">
-      <bpmn:documentation>D4 (outcome). Default owner in this map: Screening agent. Effect on candidate: Sets the ranking, and so decides who reaches the shortlist. Legal hooks: AI Act Arts. 13–15 (transparency, oversight, accuracy). Adverse-impact testing under equal treatment law. GDPR Art. 22. Delegation question: Which scores are safe to act on without a human check? How is each score explained in terms of criteria and evidence?</bpmn:documentation>
+      <bpmn:documentation>D4 (outcome). Default owner in this map: Screening agent. Effect on candidate: Sets the ranking, and so decides who reaches the shortlist. Legal hooks: AI Act Arts. 13–15 (transparency, oversight, accuracy). Adverse-impact testing under equal treatment law. GDPR Art. 22. Delegation question: Which scores are safe to act on without a human check? How is each score explained in terms of criteria and evidence? Policies: P1 Non-bias policy; P4 Escalation rule; P5 Candidate data policy; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f12</bpmn:incoming>
       <bpmn:outgoing>f14</bpmn:outgoing>
     </bpmn:businessRuleTask>
     <bpmn:exclusiveGateway id="g_band" name="D5 · Clear case or escalate?">
-      <bpmn:documentation>D5 (oversight). Default owner in this map: Screening agent, applying a rule set by a human. Effect on candidate: Decides which candidates a human ever sees. Legal hooks: AI Act Art. 14(4): overseers must be able to understand the output, spot anomalies and resist automation bias. Art. 26(2): the deployer assigns competent people to oversight. Delegation question: Which triggers force escalation (confidence, score band, missing data, proxies for protected traits), and who sets them?</bpmn:documentation>
+      <bpmn:documentation>D5 (oversight). Default owner in this map: Screening agent, applying a rule set by a human. Effect on candidate: Decides which candidates a human ever sees. Legal hooks: AI Act Art. 14(4): overseers must be able to understand the output, spot anomalies and resist automation bias. Art. 26(2): the deployer assigns competent people to oversight. Delegation question: Which triggers force escalation (confidence, score band, missing data, proxies for protected traits), and who sets them? Policies: P1 Non-bias policy; P4 Escalation rule; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f14</bpmn:incoming>
       <bpmn:outgoing>f15</bpmn:outgoing>
       <bpmn:outgoing>f16</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="t_review" name="D6 · Review escalated case">
-      <bpmn:documentation>D6 (oversight). Default owner in this map: Recruiter. Effect on candidate: Final say on hard cases. Legal hooks: Meaningful human involvement: EDPB (WP29) guidelines on automated decision-making, and CJEU C-634/21 (SCHUFA). Delegation question: What must the recruiter see to judge independently rather than simply confirm the agent's view?</bpmn:documentation>
+      <bpmn:documentation>D6 (oversight). Default owner in this map: Recruiter. Effect on candidate: Final say on hard cases. Legal hooks: Meaningful human involvement: EDPB (WP29) guidelines on automated decision-making, and CJEU C-634/21 (SCHUFA). Delegation question: What must the recruiter see to judge independently rather than simply confirm the agent's view? Policies: P2 Sign-off rule; P4 Escalation rule; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f15</bpmn:incoming>
       <bpmn:outgoing>f17</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="t_signoff" name="D7 · Sign off shortlist and rejections">
-      <bpmn:documentation>D7 (outcome). Default owner in this map: Recruiter. Effect on candidate: The formal decision someone is accountable for. Legal hooks: GDPR Art. 22: rubber-stamping in bulk can still count as solely automated. AI Act Art. 26 (deployer obligations) and Art. 86 (right to explanation). Delegation question: Is batch sign-off of agent proposals meaningful oversight? What minimum review, or sample, makes it real?</bpmn:documentation>
+      <bpmn:documentation>D7 (outcome). Default owner in this map: Recruiter. Effect on candidate: The formal decision someone is accountable for. Legal hooks: GDPR Art. 22: rubber-stamping in bulk can still count as solely automated. AI Act Art. 26 (deployer obligations) and Art. 86 (right to explanation). Delegation question: Is batch sign-off of agent proposals meaningful oversight? What minimum review, or sample, makes it real? Policies: P2 Sign-off rule; P4 Escalation rule; P8 Contest policy; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f13</bpmn:incoming>
       <bpmn:incoming>f16</bpmn:incoming>
       <bpmn:incoming>f17</bpmn:incoming>
       <bpmn:outgoing>f18</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="g_invite" name="Invite to interview?">
+      <bpmn:documentation>Policies: P2 Sign-off rule.</bpmn:documentation>
       <bpmn:incoming>f18</bpmn:incoming>
       <bpmn:outgoing>f19</bpmn:outgoing>
       <bpmn:outgoing>f20</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="t_schedule" name="D8 · Propose slots and book interview">
-      <bpmn:documentation>D8 (execution). Default owner in this map: Scheduling agent. Effect on candidate: Little direct impact, but rigid time slots can disadvantage candidates with care duties or a disability. Legal hooks: Disability equal treatment law (WGBH/CZ): reasonable accommodation. GDPR data minimisation. Delegation question: Can the agent decide fully on its own, as long as accommodation requests go to a human?</bpmn:documentation>
+      <bpmn:documentation>D8 (execution). Default owner in this map: Scheduling agent. Effect on candidate: Little direct impact, but rigid time slots can disadvantage candidates with care duties or a disability. Legal hooks: Disability equal treatment law (WGBH/CZ): reasonable accommodation. GDPR data minimisation. Delegation question: Can the agent decide fully on its own, as long as accommodation requests go to a human? Policies: P5 Candidate data policy; P6 Accommodation policy; P9 AI disclosure policy; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f19</bpmn:incoming>
       <bpmn:outgoing>f21</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:userTask id="t_interview" name="Conduct interview(s)">
+      <bpmn:documentation>Policies: P1 Non-bias policy; P6 Accommodation policy; P7 Pay transparency policy.</bpmn:documentation>
       <bpmn:incoming>f21</bpmn:incoming>
       <bpmn:outgoing>f22</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="t_assess" name="D9 · Assess candidate and decide on hire">
-      <bpmn:documentation>D9 (outcome). Default owner in this map: Hiring manager. Effect on candidate: The selection decision. Legal hooks: Equal treatment law, and documentation to justify the choice. NVP Sollicitatiecode (voluntary Dutch recruitment code). Delegation question: May an agent summarise interview notes or make a recommendation? If so, how is that recommendation logged?</bpmn:documentation>
+      <bpmn:documentation>D9 (outcome). Default owner in this map: Hiring manager. Effect on candidate: The selection decision. Legal hooks: Equal treatment law, and documentation to justify the choice. NVP Sollicitatiecode (voluntary Dutch recruitment code). Delegation question: May an agent summarise interview notes or make a recommendation? If so, how is that recommendation logged? Policies: P1 Non-bias policy; P3 Letter rule; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f22</bpmn:incoming>
       <bpmn:outgoing>f23</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="g_offer" name="Make an offer?">
+      <bpmn:documentation>Policies: P2 Sign-off rule.</bpmn:documentation>
       <bpmn:incoming>f23</bpmn:incoming>
       <bpmn:outgoing>f24</bpmn:outgoing>
       <bpmn:outgoing>f25</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="t_reject" name="D11 · Draft rejection with reasons">
-      <bpmn:documentation>D11 (execution). Default owner in this map: Communication agent. Effect on candidate: What the candidate learns about why they were rejected. Legal hooks: GDPR Arts. 13–15 and 22(3). AI Act Art. 86 (explanation of individual decisions) and Art. 50(1) (disclosure when people interact with an AI system). NVP Sollicitatiecode. Delegation question: May the agent send rejections without review if the reasons come from the decision log? How do you check that the stated reasons match the real ones?</bpmn:documentation>
+      <bpmn:documentation>D11 (execution). Default owner in this map: Communication agent. Effect on candidate: What the candidate learns about why they were rejected. Legal hooks: GDPR Arts. 13–15 and 22(3). AI Act Art. 86 (explanation of individual decisions) and Art. 50(1) (disclosure when people interact with an AI system). NVP Sollicitatiecode. Delegation question: May the agent send rejections without review if the reasons come from the decision log? How do you check that the stated reasons match the real ones? Policies: P3 Letter rule; P8 Contest policy; P9 AI disclosure policy; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f20</bpmn:incoming>
       <bpmn:incoming>f25</bpmn:incoming>
       <bpmn:outgoing>f26</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sendTask id="t_sendrej" name="Send rejection">
+      <bpmn:documentation>Policies: P2 Sign-off rule; P3 Letter rule; P9 AI disclosure policy.</bpmn:documentation>
       <bpmn:incoming>f26</bpmn:incoming>
       <bpmn:outgoing>f27</bpmn:outgoing>
     </bpmn:sendTask>
@@ -1891,6 +1975,7 @@ p { margin: 0; }
       <bpmn:outgoing>f30</bpmn:outgoing>
     </bpmn:eventBasedGateway>
     <bpmn:intermediateCatchEvent id="ev_timer" name="Objection period ends">
+      <bpmn:documentation>Policies: P5 Candidate data policy; P8 Contest policy.</bpmn:documentation>
       <bpmn:incoming>f28</bpmn:incoming>
       <bpmn:outgoing>f29</bpmn:outgoing>
       <bpmn:timerEventDefinition id="ted_ev_timer"><bpmn:timeDuration xsi:type="bpmn:tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">P30D</bpmn:timeDuration></bpmn:timerEventDefinition>
@@ -1899,12 +1984,13 @@ p { margin: 0; }
       <bpmn:incoming>f29</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:intermediateCatchEvent id="ev_contest" name="Explanation or human review requested">
+      <bpmn:documentation>Policies: P3 Letter rule; P8 Contest policy.</bpmn:documentation>
       <bpmn:incoming>f30</bpmn:incoming>
       <bpmn:outgoing>f31</bpmn:outgoing>
       <bpmn:messageEventDefinition id="med_ev_contest" />
     </bpmn:intermediateCatchEvent>
     <bpmn:userTask id="t_humanreview" name="D12 · Human review of contested decision">
-      <bpmn:documentation>D12 (oversight). Default owner in this map: Recruiter. Effect on candidate: A second look that can reverse the outcome. Legal hooks: GDPR Art. 22(3): the right to human intervention, to give one's own view and to contest the decision. AI Act Art. 86. Delegation question: Who reviews (someone other than the recruiter who signed off?), within what time limit, and what counts as a reversal?</bpmn:documentation>
+      <bpmn:documentation>D12 (oversight). Default owner in this map: Recruiter. Effect on candidate: A second look that can reverse the outcome. Legal hooks: GDPR Art. 22(3): the right to human intervention, to give one's own view and to contest the decision. AI Act Art. 86. Delegation question: Who reviews (someone other than the recruiter who signed off?), within what time limit, and what counts as a reversal? Policies: P2 Sign-off rule; P8 Contest policy; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f31</bpmn:incoming>
       <bpmn:outgoing>f32</bpmn:outgoing>
     </bpmn:userTask>
@@ -1912,15 +1998,17 @@ p { margin: 0; }
       <bpmn:incoming>f32</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:userTask id="t_terms" name="D10 · Set offer terms">
-      <bpmn:documentation>D10 (outcome). Default owner in this map: Hiring manager. Effect on candidate: Pay and conditions. Legal hooks: EU Pay Transparency Directive 2023/970: pay range shared with applicants, no questions about pay history. Equal pay. Delegation question: Can an agent propose a salary within the band without reproducing historical pay gaps?</bpmn:documentation>
+      <bpmn:documentation>D10 (outcome). Default owner in this map: Hiring manager. Effect on candidate: Pay and conditions. Legal hooks: EU Pay Transparency Directive 2023/970: pay range shared with applicants, no questions about pay history. Equal pay. Delegation question: Can an agent propose a salary within the band without reproducing historical pay gaps? Policies: P7 Pay transparency policy; P10 Decision record policy.</bpmn:documentation>
       <bpmn:incoming>f24</bpmn:incoming>
       <bpmn:outgoing>f33</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:serviceTask id="t_draftoffer" name="Draft offer letter">
+      <bpmn:documentation>Policies: P7 Pay transparency policy.</bpmn:documentation>
       <bpmn:incoming>f33</bpmn:incoming>
       <bpmn:outgoing>f34</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:userTask id="t_sendoffer" name="Approve and send offer">
+      <bpmn:documentation>Policies: P7 Pay transparency policy.</bpmn:documentation>
       <bpmn:incoming>f34</bpmn:incoming>
       <bpmn:outgoing>f35</bpmn:outgoing>
     </bpmn:userTask>
@@ -2231,6 +2319,9 @@ p { margin: 0; }
 <script>
 const DECISIONS = [{"id": "D1", "el": "t_criteria", "cat": "rule", "title": "Translate requirements into selection criteria", "owner": "Recruiter, approved by hiring manager", "effect": "Sets the rules every later agent applies. One biased criterion is applied to every applicant.", "law": "Equal treatment law (AWGB, WGBL): criteria must be job-related and proportionate, including indirect effects. AI Act Art. 9 (risk management). GDPR Art. 5(1)(c) (data minimisation).", "question": "Can an agent draft criteria from the job description, and who must approve them before they become machine-readable rules?", "hyp": "Agent proposes, human decides"}, {"id": "D2", "el": "t_search", "cat": "outcome", "title": "Search talent pools and select prospects", "owner": "Sourcing agent", "effect": "Decides who hears about the job at all. People who are never approached never apply, so they are never rejected and have nothing to contest.", "law": "AI Act Annex III(4)(a) names targeted job advertisements explicitly. Equal treatment law (who gets targeted). GDPR Art. 14 (informing people whose data was collected indirectly).", "question": "May the agent choose whom to approach on its own? How do you measure adverse impact on people who were never contacted?", "hyp": "Agent decides within approved rules, with sampled audits"}, {"id": "D3", "el": "t_knock", "cat": "outcome", "title": "Check knock-out criteria", "owner": "Screening agent", "effect": "A fail ends the application.", "law": "GDPR Art. 22 (a rejection based solely on automated processing). AI Act Art. 12 (logging) and Art. 14 (human oversight). Equal treatment law: language, degree and experience requirements can discriminate indirectly.", "question": "May a failed hard requirement, such as no work permit, lead to automatic rejection, or does every rejection need D7?", "hyp": "Agent decides only for objective, verifiable criteria (disputed)"}, {"id": "D4", "el": "t_score", "cat": "outcome", "title": "Score against weighted criteria", "owner": "Screening agent", "effect": "Sets the ranking, and so decides who reaches the shortlist.", "law": "AI Act Arts. 13–15 (transparency, oversight, accuracy). Adverse-impact testing under equal treatment law. GDPR Art. 22.", "question": "Which scores are safe to act on without a human check? How is each score explained in terms of criteria and evidence?", "hyp": "Agent proposes, human decides"}, {"id": "D5", "el": "g_band", "cat": "oversight", "title": "Clear case or escalate?", "owner": "Screening agent, applying a rule set by a human", "effect": "Decides which candidates a human ever sees.", "law": "AI Act Art. 14(4): overseers must be able to understand the output, spot anomalies and resist automation bias. Art. 26(2): the deployer assigns competent people to oversight.", "question": "Which triggers force escalation (confidence, score band, missing data, proxies for protected traits), and who sets them?", "hyp": "Human sets the rule, agent applies it"}, {"id": "D6", "el": "t_review", "cat": "oversight", "title": "Review escalated case", "owner": "Recruiter", "effect": "Final say on hard cases.", "law": "Meaningful human involvement: EDPB (WP29) guidelines on automated decision-making, and CJEU C-634/21 (SCHUFA).", "question": "What must the recruiter see to judge independently rather than simply confirm the agent's view?", "hyp": "Human only"}, {"id": "D7", "el": "t_signoff", "cat": "outcome", "title": "Sign off shortlist and rejections", "owner": "Recruiter", "effect": "The formal decision someone is accountable for.", "law": "GDPR Art. 22: rubber-stamping in bulk can still count as solely automated. AI Act Art. 26 (deployer obligations) and Art. 86 (right to explanation).", "question": "Is batch sign-off of agent proposals meaningful oversight? What minimum review, or sample, makes it real?", "hyp": "Human decides, agent prepares"}, {"id": "D8", "el": "t_schedule", "cat": "execution", "title": "Propose slots and book interview", "owner": "Scheduling agent", "effect": "Little direct impact, but rigid time slots can disadvantage candidates with care duties or a disability.", "law": "Disability equal treatment law (WGBH/CZ): reasonable accommodation. GDPR data minimisation.", "question": "Can the agent decide fully on its own, as long as accommodation requests go to a human?", "hyp": "Agent decides"}, {"id": "D9", "el": "t_assess", "cat": "outcome", "title": "Assess candidate and decide on hire", "owner": "Hiring manager", "effect": "The selection decision.", "law": "Equal treatment law, and documentation to justify the choice. NVP Sollicitatiecode (voluntary Dutch recruitment code).", "question": "May an agent summarise interview notes or make a recommendation? If so, how is that recommendation logged?", "hyp": "Human only; agent may summarise"}, {"id": "D10", "el": "t_terms", "cat": "outcome", "title": "Set offer terms", "owner": "Hiring manager", "effect": "Pay and conditions.", "law": "EU Pay Transparency Directive 2023/970: pay range shared with applicants, no questions about pay history. Equal pay.", "question": "Can an agent propose a salary within the band without reproducing historical pay gaps?", "hyp": "Agent proposes within band, human decides"}, {"id": "D11", "el": "t_reject", "cat": "execution", "title": "Draft rejection with reasons", "owner": "Communication agent", "effect": "What the candidate learns about why they were rejected.", "law": "GDPR Arts. 13–15 and 22(3). AI Act Art. 86 (explanation of individual decisions) and Art. 50(1) (disclosure when people interact with an AI system). NVP Sollicitatiecode.", "question": "May the agent send rejections without review if the reasons come from the decision log? How do you check that the stated reasons match the real ones?", "hyp": "Agent decides, if the text is generated from logged reasons"}, {"id": "D12", "el": "t_humanreview", "cat": "oversight", "title": "Human review of contested decision", "owner": "Recruiter", "effect": "A second look that can reverse the outcome.", "law": "GDPR Art. 22(3): the right to human intervention, to give one's own view and to contest the decision. AI Act Art. 86.", "question": "Who reviews (someone other than the recruiter who signed off?), within what time limit, and what counts as a reversal?", "hyp": "Human only"}];
 const OV_MAP = {"D1": "o_define", "D2": "o_source", "D3": "o_screen", "D4": "o_screen", "D5": "o_screen", "D6": "o_signoff", "D7": "o_signoff", "D8": "o_schedule", "D9": "o_interview", "D10": "o_offer", "D11": "o_reject", "D12": "o_reject"};
+const POLICIES = [{"id": "P1", "name": "Non-bias policy", "src": "poster", "rule": "Criteria, scores and interview questions must be job-related. Protected traits and their proxies (name, photo, age, address) are masked or not used, and adverse impact is tested before results are acted on.", "law": "AWGB, WGBL, WGBH/CZ; AI Act Arts. 10 and 15"}, {"id": "P2", "name": "Sign-off rule", "src": "poster", "rule": "Agents may propose a rejection; only a named person may decide it. No rejection leaves the organisation without a recorded signer.", "law": "GDPR Art. 22; AI Act Arts. 14 and 26"}, {"id": "P3", "name": "Letter rule", "src": "poster", "rule": "Every rejection states the criteria and evidence it was based on, in words the candidate can check, and says how to ask for a review.", "law": "GDPR Arts. 13–15 and 22(3); AI Act Art. 86; NVP Sollicitatiecode"}, {"id": "P4", "name": "Escalation rule", "src": "drafted", "rule": "Sets when an agent must hand a case to a person (score band, low confidence, missing data, proxy flags) and what that person must see before deciding.", "law": "AI Act Arts. 14(4) and 26(2)"}, {"id": "P5", "name": "Candidate data policy", "src": "drafted", "rule": "Which personal data agents may collect and use, how candidates are informed, and how long CVs and talent-pool records are kept.", "law": "GDPR Arts. 5(1)(c), 13 and 14"}, {"id": "P6", "name": "Accommodation policy", "src": "drafted", "rule": "Candidates can ask for adjustments to the interview (time, format, access). Requests go to a person, and the reason is not stored by agents.", "law": "WGBH/CZ (reasonable accommodation)"}, {"id": "P7", "name": "Pay transparency policy", "src": "drafted", "rule": "The pay range is set before publishing and shown to applicants. Nobody asks about pay history. Offers stay inside the band unless a person approves otherwise.", "law": "Directive (EU) 2023/970"}, {"id": "P8", "name": "Contest policy", "src": "drafted", "rule": "Sets the objection period, who reviews a contested decision (not the original signer) and how a reversal re-enters the process.", "law": "GDPR Art. 22(3); AI Act Art. 86"}, {"id": "P9", "name": "AI disclosure policy", "src": "drafted", "rule": "Candidates are told where AI agents act in the process, and every message an agent sends says that it comes from an agent.", "law": "AI Act Arts. 26(11) and 50(1)"}, {"id": "P10", "name": "Decision record policy", "src": "concept", "rule": "Every decision point (D1–D12) logs the policy version, the evidence, the actor and the time. A step with no policy attached stops the run.", "law": "AI Act Arts. 12 and 26(6); concept report Sec. 9"}];
+const STEPS = [{"el": "t_define", "label": "Define role and requirements", "pol": ["P1", "P7"]}, {"el": "t_criteria", "label": "D1 · Selection criteria", "pol": ["P1", "P5", "P10"]}, {"el": "g_approve", "label": "Vacancy and criteria approved?", "pol": ["P1"]}, {"el": "t_publish", "label": "Publish vacancy", "pol": ["P7", "P9"]}, {"el": "t_search", "label": "D2 · Search talent pools", "pol": ["P1", "P5", "P10"]}, {"el": "t_approach", "label": "Approach prospects", "pol": ["P5", "P9"]}, {"el": "ev_app", "label": "Application received", "pol": ["P5", "P7", "P9"]}, {"el": "t_parse", "label": "Parse CV and extract evidence", "pol": ["P1", "P4", "P5"]}, {"el": "t_knock", "label": "D3 · Knock-out check", "pol": ["P1", "P2", "P5", "P10"]}, {"el": "g_knock", "label": "Meets knock-out criteria?", "pol": ["P2"]}, {"el": "t_score", "label": "D4 · Score candidate", "pol": ["P1", "P4", "P5", "P10"]}, {"el": "g_band", "label": "D5 · Clear case or escalate?", "pol": ["P1", "P4", "P10"]}, {"el": "t_review", "label": "D6 · Review escalated case", "pol": ["P2", "P4", "P10"]}, {"el": "t_signoff", "label": "D7 · Sign off shortlist and rejections", "pol": ["P2", "P4", "P8", "P10"]}, {"el": "g_invite", "label": "Invite to interview?", "pol": ["P2"]}, {"el": "t_schedule", "label": "D8 · Book interview", "pol": ["P5", "P6", "P9", "P10"]}, {"el": "t_interview", "label": "Conduct interview(s)", "pol": ["P1", "P6", "P7"]}, {"el": "t_assess", "label": "D9 · Decide on hire", "pol": ["P1", "P3", "P10"]}, {"el": "g_offer", "label": "Make an offer?", "pol": ["P2"]}, {"el": "t_terms", "label": "D10 · Set offer terms", "pol": ["P7", "P10"]}, {"el": "t_draftoffer", "label": "Draft offer letter", "pol": ["P7"]}, {"el": "t_sendoffer", "label": "Approve and send offer", "pol": ["P7"]}, {"el": "t_reject", "label": "D11 · Draft rejection with reasons", "pol": ["P3", "P8", "P9", "P10"]}, {"el": "t_sendrej", "label": "Send rejection", "pol": ["P2", "P3", "P9"]}, {"el": "ev_timer", "label": "Objection period ends", "pol": ["P5", "P8"]}, {"el": "ev_contest", "label": "Review requested", "pol": ["P3", "P8"]}, {"el": "t_humanreview", "label": "D12 · Human review of contest", "pol": ["P2", "P8", "P10"]}];
+const CHANGES = [{"id": "C01", "pol": "P1", "kind": "Tighten", "text": "Replace “native Dutch speaker” with “Dutch at C1 level” as a requirement.", "els": ["t_criteria", "t_knock", "t_score"]}, {"id": "C02", "pol": "P1", "kind": "Tighten", "text": "Add home address and postcode to the fields masked before scoring.", "els": ["t_parse", "t_score", "g_band"]}, {"id": "C03", "pol": "P1", "kind": "Parameter", "text": "Raise the adverse-impact threshold from 0.8 (four-fifths rule) to 0.9; below it, the batch is escalated.", "els": ["t_score", "g_band"]}, {"id": "C04", "pol": "P1", "kind": "Tighten", "text": "Stop using graduation year anywhere, because it is a proxy for age.", "els": ["t_criteria", "t_parse", "t_knock", "t_score"]}, {"id": "C05", "pol": "P1", "kind": "New rule", "text": "Check the gender and age balance of the prospect list before any outreach.", "els": ["t_search"]}, {"id": "C06", "pol": "P1", "kind": "New rule", "text": "Interviews use a fixed question set per criterion, and the decision is scored against it.", "els": ["t_interview", "t_assess"]}, {"id": "C07", "pol": "P1", "kind": "Loosen", "text": "Career gaps no longer count against the score and are no longer extracted.", "els": ["t_parse", "t_score"]}, {"id": "C08", "pol": "P2", "kind": "Loosen", "text": "Allow automatic rejection without sign-off when the only failed criterion is a missing work permit.", "els": ["t_knock", "g_knock", "t_signoff"]}, {"id": "C09", "pol": "P2", "kind": "Tighten", "text": "Replace batch sign-off with sign-off per candidate by a named recruiter.", "els": ["t_signoff"]}, {"id": "C10", "pol": "P2", "kind": "Tighten", "text": "Rejections of escalated cases need a second person (four-eyes).", "els": ["t_review", "t_signoff"]}, {"id": "C11", "pol": "P2", "kind": "New rule", "text": "A proposed rejection that is not signed within 48 hours alerts the recruiter instead of waiting silently.", "els": ["g_knock", "t_signoff"]}, {"id": "C12", "pol": "P2", "kind": "Tighten", "text": "The recruiter must open the evidence view of a candidate before the sign button is enabled.", "els": ["t_review", "t_signoff"]}, {"id": "C13", "pol": "P3", "kind": "Tighten", "text": "The letter names each failed criterion together with the evidence line from the CV.", "els": ["t_reject", "t_sendrej"]}, {"id": "C14", "pol": "P3", "kind": "New rule", "text": "The letter says that an AI agent prepared the decision and names the role of the person who decided.", "els": ["t_reject", "t_sendrej"]}, {"id": "C15", "pol": "P3", "kind": "New rule", "text": "The letter explains how to ask for an explanation or human review, and by when.", "els": ["t_reject", "ev_contest"]}, {"id": "C16", "pol": "P3", "kind": "Clarify", "text": "Letters are written in the language of the application (Dutch or English).", "els": ["t_reject", "t_sendrej"]}, {"id": "C17", "pol": "P3", "kind": "Tighten", "text": "Rejections after an interview also need reasons: the hiring manager records one per criterion.", "els": ["t_assess", "t_reject"]}, {"id": "C18", "pol": "P4", "kind": "Parameter", "text": "Widen the borderline band around the cut-off from ±5 to ±10 points.", "els": ["g_band", "t_review", "t_signoff"]}, {"id": "C19", "pol": "P4", "kind": "New rule", "text": "Escalate any CV the parser reads with less than 80% confidence.", "els": ["t_parse", "g_band", "t_review"]}, {"id": "C20", "pol": "P4", "kind": "New rule", "text": "Escalate when a score depends on a field flagged as a possible proxy for a protected trait.", "els": ["t_parse", "t_score", "g_band"]}, {"id": "C21", "pol": "P4", "kind": "New rule", "text": "Send a random 5% sample of clear fails to human review, to check for automation bias.", "els": ["g_band", "t_review", "t_signoff"]}, {"id": "C22", "pol": "P4", "kind": "Parameter", "text": "Escalated cases must be reviewed within 3 working days.", "els": ["t_review"]}, {"id": "C23", "pol": "P5", "kind": "Parameter", "text": "Delete CVs of rejected candidates 4 weeks after the objection period ends, unless they consent to 1 year in the talent pool.", "els": ["ev_timer", "t_search"]}, {"id": "C24", "pol": "P5", "kind": "New rule", "text": "Inform prospects found in talent pools within one month that their data was collected, and from where.", "els": ["t_search", "t_approach"]}, {"id": "C25", "pol": "P5", "kind": "Tighten", "text": "The parser no longer extracts photo, date of birth or nationality; the work permit is asked directly.", "els": ["t_parse", "t_knock", "t_score"]}, {"id": "C26", "pol": "P10", "kind": "Parameter", "text": "Keep decision records for the objection period plus at least 6 months, as the AI Act requires of deployers.", "els": ["t_criteria", "t_search", "t_knock", "t_score", "g_band", "t_review", "t_signoff", "t_schedule", "t_assess", "t_terms", "t_reject", "t_humanreview"]}, {"id": "C27", "pol": "P5", "kind": "Tighten", "text": "The scheduling agent stores only availability, never the reason for an accommodation request.", "els": ["t_schedule"]}, {"id": "C28", "pol": "P6", "kind": "New rule", "text": "Offer a remote interview option by default.", "els": ["t_schedule", "t_interview"]}, {"id": "C29", "pol": "P6", "kind": "Parameter", "text": "Accommodation requests reach a recruiter within 1 working day.", "els": ["t_schedule"]}, {"id": "C30", "pol": "P6", "kind": "Parameter", "text": "Widen the slot window from 3 to 10 working days so people with care duties can find a time.", "els": ["t_schedule"]}, {"id": "C31", "pol": "P7", "kind": "New rule", "text": "The pay range must be set when the role is defined and appear in the vacancy text.", "els": ["t_define", "t_publish"]}, {"id": "C32", "pol": "P7", "kind": "Tighten", "text": "Remove pay-history questions from the application form and the interview guide.", "els": ["ev_app", "t_interview"]}, {"id": "C33", "pol": "P7", "kind": "Tighten", "text": "An offer outside the pay band needs a second approval before it is sent.", "els": ["t_terms", "t_sendoffer"]}, {"id": "C34", "pol": "P7", "kind": "Clarify", "text": "The agent may propose a salary from role level and experience only, never from previous pay.", "els": ["t_terms", "t_draftoffer"]}, {"id": "C35", "pol": "P8", "kind": "Parameter", "text": "Shorten the objection period from 30 to 14 days.", "els": ["ev_timer", "t_reject", "t_humanreview"]}, {"id": "C36", "pol": "P8", "kind": "Tighten", "text": "A contested decision is reviewed by a recruiter other than the one who signed it.", "els": ["t_humanreview", "t_signoff"]}, {"id": "C37", "pol": "P8", "kind": "Clarify", "text": "A reversed decision sends the candidate back to sign-off, not to the start.", "els": ["t_humanreview", "t_signoff"]}, {"id": "C38", "pol": "P9", "kind": "New rule", "text": "The vacancy and the application confirmation say that AI agents take part in screening.", "els": ["t_publish", "ev_app"]}, {"id": "C39", "pol": "P9", "kind": "New rule", "text": "Every message an agent sends (outreach, scheduling, rejection) says that it comes from an agent.", "els": ["t_approach", "t_schedule", "t_sendrej"]}, {"id": "C40", "pol": "P10", "kind": "New rule", "text": "Every decision point logs the ID and version of each policy it applied; a step with no policy attached stops the run.", "els": ["t_criteria", "t_search", "t_knock", "t_score", "g_band", "t_review", "t_signoff", "t_schedule", "t_assess", "t_terms", "t_reject", "t_humanreview"]}];
 const SLICES = [
   { id: "A", name: "Screening to sign-off", ds: "D3–D7", tag: "Core",
     body: "Application in, shortlist or proposed rejection out. The heart of the GDPR Art. 22 question.",
@@ -2307,6 +2398,7 @@ function applyRowFilter() {
 }
 async function applySlice(id) {
   if (activeSlice === id) id = null;
+  if (typeof activePol !== 'undefined' && (activePol || activeChange)) { activePol = null; activeChange = null; syncPolicyUI(); }
   if (id && view !== "detail") await setView("detail");
   activeSlice = id;
   document.querySelectorAll(".slice").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.slice === id)));
@@ -2406,8 +2498,138 @@ async function setView(v) {
     if (e.type === "bpmn:Participant" || e.type === "bpmn:Lane" || e.type === "bpmn:TextAnnotation" || e.type === "bpmn:DataStoreReference") canvas.addMarker(e.id, "keep");
     if ((v === "detail" && byEl[e.id]) || (v === "overview" && byOvEl[e.id])) canvas.addMarker(e.id, "decision");
   });
+  drawPolicyOverlays();
+  if (activePol) { const p = activePol; activePol = null; selectPolicy(p, false); return; }
   if (v === "overview") canvas.zoom("fit-viewport"); else fitHeight();
 }
+
+/* ---------- policy layer ---------- */
+const OV_GROUP = { o_define: ["t_define","t_criteria","g_approve"], o_source: ["t_publish","t_search","t_approach"],
+  o_screen: ["ev_app","t_parse","t_knock","g_knock","t_score","g_band"], o_signoff: ["t_review","t_signoff","g_invite"],
+  o_schedule: ["t_schedule"], o_interview: ["t_interview","t_assess","g_offer"], o_offer: ["t_terms","t_draftoffer","t_sendoffer"],
+  o_reject: ["t_reject","t_sendrej","ev_timer","ev_contest","t_humanreview"] };
+const D2OV = {}; Object.entries(OV_GROUP).forEach(([o, els]) => els.forEach(e => D2OV[e] = o));
+const stepPol = Object.fromEntries(STEPS.map(s => [s.el, s.pol]));
+const stepLabel = Object.fromEntries(STEPS.map(s => [s.el, s.label]));
+const polById = Object.fromEntries(POLICIES.map(p => [p.id, p]));
+const pnum = id => +id.slice(1);
+const ovPol = {}; Object.entries(OV_GROUP).forEach(([o, els]) => ovPol[o] = [...new Set(els.flatMap(e => stepPol[e] || []))].sort((a, b) => pnum(a) - pnum(b)));
+const polSteps = Object.fromEntries(POLICIES.map(p => [p.id, STEPS.filter(s => s.pol.includes(p.id)).map(s => s.el)]));
+const stepShort = el => { const l = stepLabel[el] || el; const m = l.match(/^(D\d+)/); return m ? m[1] : l; };
+let activePol = null, activeChange = null, overlayIds = [];
+
+function drawPolicyOverlays() {
+  if (!viewer) return;
+  const ov = viewer.get("overlays"), reg = viewer.get("elementRegistry");
+  overlayIds.forEach(i => { try { ov.remove(i); } catch (_) {} }); overlayIds = [];
+  const src = view === "detail" ? stepPol : ovPol;
+  Object.entries(src).forEach(([el, ps]) => {
+    const e = reg.get(el); if (!e || !ps.length) return;
+    const isTask = /Task$/.test(e.type);
+    const labelAbove = e.label && e.label.y < e.y;
+    const below = !isTask && labelAbove;
+    const div = document.createElement("div");
+    div.className = "pol-ov" + (below ? "" : " up");
+    div.style.width = Math.max(e.width, 90) + "px";
+    div.innerHTML = ps.map(p => `<span>${p}</span>`).join("");
+    const pos = below ? { top: e.height + 4, left: 0 } : { top: -2, left: 0 };
+    overlayIds.push(ov.add(el, "policy", { position: pos, html: div }));
+  });
+}
+function clearHighlight() {
+  if (!canvas) return;
+  sliceMarked.forEach(e => canvas.removeMarker(e, "inslice")); sliceMarked = [];
+  document.getElementById("canvas").classList.remove("slicing");
+}
+function highlightSteps(els) {
+  if (!canvas) return;
+  clearHighlight();
+  const reg = viewer.get("elementRegistry");
+  const ids = view === "detail" ? els : [...new Set(els.map(e => D2OV[e]).filter(Boolean))];
+  ids.forEach(e => [e, e + "_label"].forEach(x => { if (reg.get(x)) { canvas.addMarker(x, "inslice"); sliceMarked.push(x); } }));
+  document.getElementById("canvas").classList.add("slicing");
+  zoomTo(ids);
+}
+function resetSlices() {
+  activeSlice = null;
+  document.querySelectorAll(".slice").forEach(b => b.setAttribute("aria-pressed", "false"));
+  applyRowFilter();
+}
+function syncPolicyUI() {
+  document.querySelectorAll("[data-pol]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.pol === activePol)));
+  let n = 0;
+  CHANGES.forEach(c => {
+    const r = document.getElementById("chg-" + c.id);
+    r.hidden = !!activePol && c.pol !== activePol; if (!r.hidden) n++;
+    r.classList.toggle("sel", c.id === activeChange);
+  });
+  document.getElementById("chgcount").textContent = activePol
+    ? `Showing ${n} of ${CHANGES.length} changes, for ${activePol} ${polById[activePol].name}. Click the policy again to show all.`
+    : `${CHANGES.length} changes across ${POLICIES.length} policies.`;
+}
+function selectPolicy(id, scroll) {
+  activePol = activePol === id ? null : id; activeChange = null;
+  resetSlices();
+  if (activePol) highlightSteps(polSteps[activePol]); else { clearHighlight(); if (canvas) fitHeight(); }
+  syncPolicyUI();
+  if (scroll && activePol) document.getElementById("canvas").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+}
+async function selectChange(c) {
+  if (activeChange === c.id) { activeChange = null; clearHighlight(); if (canvas) fitHeight(); syncPolicyUI(); return; }
+  activeChange = c.id;
+  resetSlices();
+  if (view !== "detail") await setView("detail");
+  highlightSteps(c.els);
+  syncPolicyUI();
+  document.getElementById("canvas").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+}
+
+(function buildPolicyUI() {
+  const row = document.getElementById("polrow");
+  POLICIES.forEach(p => {
+    const b = document.createElement("button");
+    b.className = "pchip"; b.dataset.pol = p.id; b.setAttribute("aria-pressed", "false"); b.title = p.name;
+    b.textContent = p.id; b.addEventListener("click", () => selectPolicy(p.id, false)); row.appendChild(b);
+  });
+  const grid = document.getElementById("polgrid");
+  const srcName = { poster: "On poster", drafted: "Drafted", concept: "Concept report" };
+  POLICIES.forEach(p => {
+    const b = document.createElement("button");
+    b.className = "pcard"; b.dataset.pol = p.id; b.setAttribute("aria-pressed", "false");
+    b.innerHTML = `<div class="top"><span class="pid">${p.id}</span><span class="nm">${esc(p.name)}</span><span class="src">${srcName[p.src]}</span></div>
+      <span class="rl">${esc(p.rule)}</span><span class="lw">${esc(p.law)}</span>
+      <span class="steps">${polSteps[p.id].map(e => `<span class="stp">${esc(stepShort(e))}</span>`).join("")}</span>`;
+    b.addEventListener("click", () => selectPolicy(p.id, true)); grid.appendChild(b);
+  });
+  const mx = document.getElementById("matrix");
+  const cnt = {}; CHANGES.forEach(c => c.els.forEach(e => cnt[e] = (cnt[e] || 0) + 1));
+  mx.innerHTML = `<thead><tr><th scope="col">Step</th>${POLICIES.map(p => `<th scope="col" title="${esc(p.name)}" data-pol="${p.id}">${p.id}</th>`).join("")}<th scope="col" style="color:var(--muted)">Changes</th></tr></thead><tbody>` +
+    STEPS.map(s => `<tr data-el="${s.el}"><td>${esc(s.label)}</td>${POLICIES.map(p => s.pol.includes(p.id) ? `<td class="y" aria-label="yes">●</td>` : `<td></td>`).join("")}<td><span class="n">${cnt[s.el] || 0}</span></td></tr>`).join("") + "</tbody>";
+  mx.querySelectorAll("thead th[data-pol]").forEach(th => th.addEventListener("click", () => selectPolicy(th.dataset.pol, true)));
+  mx.querySelectorAll("tbody tr").forEach(tr => tr.addEventListener("click", async () => {
+    activePol = null; activeChange = null; resetSlices(); syncPolicyUI();
+    if (view !== "detail") await setView("detail");
+    highlightSteps([tr.dataset.el]);
+    document.getElementById("canvas").scrollIntoView({ behavior: "smooth", block: "center" });
+  }));
+  const ch = document.getElementById("chg");
+  CHANGES.forEach(c => {
+    const r = document.createElement("div");
+    r.className = "crow"; r.id = "chg-" + c.id; r.tabIndex = 0;
+    r.innerHTML = `<span class="cid">${c.id}</span><span class="cpol"><b>${c.pol}</b> ${esc(polById[c.pol].name)}</span>
+      <span>${esc(c.text)}</span><span class="kind">${esc(c.kind)}</span>
+      <span class="steps">${c.els.length === 12 && c.els.every(e => /^D/.test(stepShort(e))) ? `<span class="stp">All decision points D1–D12</span>` : c.els.map(e => `<span class="stp">${esc(stepLabel[e] || e)}</span>`).join("")}</span>`;
+    r.addEventListener("click", () => selectChange(c));
+    r.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectChange(c); } });
+    ch.appendChild(r);
+  });
+  syncPolicyUI();
+  document.getElementById("poltoggle").addEventListener("click", ev => {
+    const on = ev.currentTarget.getAttribute("aria-pressed") !== "true";
+    ev.currentTarget.setAttribute("aria-pressed", String(on));
+    document.getElementById("canvas").classList.toggle("nopol", !on);
+  });
+})();
 async function init() {
   const host = document.getElementById("canvas");
   setView("overview");
@@ -2421,7 +2643,7 @@ async function init() {
   document.getElementById("zin").onclick = () => canvas.zoom(canvas.zoom() * 1.25);
   document.getElementById("zout").onclick = () => canvas.zoom(canvas.zoom() / 1.25);
   document.getElementById("fit").onclick = () => canvas.zoom("fit-viewport");
-  document.getElementById("clear").onclick = () => { if (activeSlice) applySlice(activeSlice); if (hl) { canvas.removeMarker(hl, "hl"); hl = null; } document.querySelectorAll(".row.sel").forEach(r => r.classList.remove("sel")); };
+  document.getElementById("clear").onclick = () => { if (activePol || activeChange) { activePol = null; activeChange = null; clearHighlight(); syncPolicyUI(); fitHeight(); } if (activeSlice) applySlice(activeSlice); if (hl) { canvas.removeMarker(hl, "hl"); hl = null; } document.querySelectorAll(".row.sel").forEach(r => r.classList.remove("sel")); };
   viewer.on("element.click", ev => {
     const d = view === "detail" ? byEl[ev.element.id] : (byOvEl[ev.element.id] || [])[0];
     if (d) focusDecision(d, false);
